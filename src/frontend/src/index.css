@@ -1,0 +1,197 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:wght@300..900&family=JetBrains+Mono:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── Light grey/white base ── */
+    --background: 0.974 0.004 264;
+    --foreground: 0.18 0.01 264;
+
+    /* White cards */
+    --card: 1 0 0;
+    --card-foreground: 0.18 0.01 264;
+    --popover: 1 0 0;
+    --popover-foreground: 0.18 0.01 264;
+
+    /* ── Cricket green primary #198754 → oklch(0.52 0.14 155) ── */
+    --primary: 0.52 0.14 155;
+    --primary-foreground: 1 0 0;
+
+    /* Light grey secondary */
+    --secondary: 0.94 0.005 264;
+    --secondary-foreground: 0.28 0.01 264;
+
+    --muted: 0.96 0.004 264;
+    --muted-foreground: 0.5 0.01 265;
+
+    --accent: 0.52 0.14 155;
+    --accent-foreground: 1 0 0;
+
+    /* ── Wicket red #DC3545 → oklch(0.56 0.22 25) ── */
+    --destructive: 0.56 0.22 25;
+    --destructive-foreground: 1 0 0;
+
+    /* ── Boundary gold — warm amber #C8860A → oklch(0.63 0.15 72) ── */
+    --boundary: 0.63 0.15 72;
+    --boundary-foreground: 1 0 0;
+
+    /* ── Wide: blue #1565C0 → oklch(0.46 0.19 258) ── */
+    --blue-extra: 0.46 0.19 258;
+    --blue-extra-foreground: 1 0 0;
+
+    /* ── No Ball: warm amber-brown #B45309 → oklch(0.54 0.14 68) ── */
+    --noball-extra: 0.54 0.14 68;
+    --noball-extra-foreground: 1 0 0;
+
+    /* ── Bye: dark teal-green #00695C → oklch(0.44 0.10 195) ── */
+    --teal-extra: 0.44 0.1 195;
+    --teal-extra-foreground: 1 0 0;
+
+    /* ── Leg Bye: medium green #1B5E20 → oklch(0.39 0.12 155) ── */
+    --bye-extra: 0.39 0.12 155;
+    --bye-extra-foreground: 1 0 0;
+
+    /* ── Undo dark forest green #1B3A2B → oklch(0.27 0.07 165) ── */
+    --undo-btn: 0.27 0.07 165;
+    --undo-btn-foreground: 1 0 0;
+
+    /* ── Reset dark maroon #6B0F1A → oklch(0.33 0.14 22) ── */
+    --reset-btn: 0.33 0.14 22;
+    --reset-btn-foreground: 1 0 0;
+
+    /* ── Scoreboard: very dark #0a1f10 → oklch(0.17 0.06 155) ── */
+    --cricket-dark: 0.17 0.06 155;
+    /* Cricket mid green = primary */
+
+    --border: 0.91 0.005 264;
+    --input: 0.91 0.005 264;
+    --ring: 0.52 0.14 155;
+    --radius: 0.75rem;
+
+    --chart-1: 0.52 0.14 155;
+    --chart-2: 0.56 0.22 25;
+    --chart-3: 0.63 0.15 72;
+    --chart-4: 0.46 0.19 258;
+    --chart-5: 0.44 0.1 195;
+
+    --sidebar: 1 0 0;
+    --sidebar-foreground: 0.18 0.01 264;
+    --sidebar-primary: 0.52 0.14 155;
+    --sidebar-primary-foreground: 1 0 0;
+    --sidebar-accent: 0.94 0.005 264;
+    --sidebar-accent-foreground: 0.28 0.01 264;
+    --sidebar-border: 0.91 0.005 264;
+    --sidebar-ring: 0.52 0.14 155;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Figtree", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    overscroll-behavior: none;
+    user-select: none;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+@layer utilities {
+  /* Scoreboard light green gradient (setup hero) */
+  .scoreboard-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(var(--cricket-dark)) 0%,
+      oklch(var(--primary)) 100%
+    );
+  }
+
+  /* Scoreboard very dark green for main scoring card */
+  .scoreboard-dark {
+    background: linear-gradient(
+      160deg,
+      oklch(0.12 0.05 155) 0%,
+      oklch(0.22 0.09 155) 100%
+    );
+  }
+
+  /* Wicket red gradient */
+  .wicket-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(0.56 0.22 25) 0%,
+      oklch(0.44 0.18 25) 100%
+    );
+  }
+
+  /* Hero score text */
+  .score-hero {
+    font-size: clamp(3.5rem, 18vw, 5.5rem);
+    text-shadow: 0 0 32px oklch(1 0 0 / 0.3);
+  }
+
+  .tap-active:active {
+    transform: scale(0.96);
+    opacity: 0.88;
+    transition: transform 0.08s ease, opacity 0.08s ease;
+  }
+
+  /* Soft shadow for cards */
+  .card-shadow {
+    box-shadow: 0 1px 3px oklch(0.18 0.01 264 / 0.08), 0 4px 12px
+      oklch(0.18 0.01 264 / 0.06);
+  }
+
+  /* Button shadows */
+  .btn-shadow {
+    box-shadow: 0 2px 4px oklch(0.18 0.01 264 / 0.15), 0 1px 2px
+      oklch(0.18 0.01 264 / 0.1);
+  }
+
+  .btn-shadow-green {
+    box-shadow: 0 3px 8px oklch(0.52 0.14 155 / 0.35), 0 1px 2px
+      oklch(0.52 0.14 155 / 0.2);
+  }
+
+  .btn-shadow-red {
+    box-shadow: 0 3px 8px oklch(0.56 0.22 25 / 0.35), 0 1px 2px
+      oklch(0.56 0.22 25 / 0.2);
+  }
+
+  .btn-shadow-gold {
+    box-shadow: 0 3px 8px oklch(0.63 0.15 72 / 0.4), 0 1px 2px
+      oklch(0.63 0.15 72 / 0.2);
+  }
+
+  .btn-shadow-blue {
+    box-shadow: 0 2px 6px oklch(0.46 0.19 258 / 0.3), 0 1px 2px
+      oklch(0.46 0.19 258 / 0.15);
+  }
+
+  .btn-shadow-noball {
+    box-shadow: 0 2px 6px oklch(0.54 0.14 68 / 0.3), 0 1px 2px
+      oklch(0.54 0.14 68 / 0.15);
+  }
+
+  .btn-shadow-teal {
+    box-shadow: 0 2px 6px oklch(0.44 0.1 195 / 0.3), 0 1px 2px
+      oklch(0.44 0.1 195 / 0.15);
+  }
+
+  .score-text-glow {
+    text-shadow: 0 0 24px oklch(1 0 0 / 0.5);
+  }
+}
