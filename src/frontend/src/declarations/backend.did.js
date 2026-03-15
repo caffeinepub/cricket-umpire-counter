@@ -8,31 +8,45 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const MatchState = IDL.Record({
+export const Team = IDL.Record({ 'name' : IDL.Text, 'score' : IDL.Nat });
+export const Time = IDL.Int;
+export const Match = IDL.Record({
+  'team1' : Team,
+  'team2' : Team,
   'overs' : IDL.Nat,
-  'runs' : IDL.Nat,
-  'wickets' : IDL.Nat,
+  'date' : Time,
   'balls' : IDL.Nat,
 });
 
 export const idlService = IDL.Service({
-  'getSavedMatchState' : IDL.Func([], [MatchState], ['query']),
-  'saveMatchState' : IDL.Func([IDL.Nat, IDL.Nat, IDL.Nat, IDL.Nat], [], []),
+  'getAllMatches' : IDL.Func([], [IDL.Vec(Match)], ['query']),
+  'saveMatch' : IDL.Func(
+      [IDL.Text, IDL.Nat, IDL.Text, IDL.Nat, IDL.Nat, IDL.Nat],
+      [],
+      [],
+    ),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
-  const MatchState = IDL.Record({
+  const Team = IDL.Record({ 'name' : IDL.Text, 'score' : IDL.Nat });
+  const Time = IDL.Int;
+  const Match = IDL.Record({
+    'team1' : Team,
+    'team2' : Team,
     'overs' : IDL.Nat,
-    'runs' : IDL.Nat,
-    'wickets' : IDL.Nat,
+    'date' : Time,
     'balls' : IDL.Nat,
   });
   
   return IDL.Service({
-    'getSavedMatchState' : IDL.Func([], [MatchState], ['query']),
-    'saveMatchState' : IDL.Func([IDL.Nat, IDL.Nat, IDL.Nat, IDL.Nat], [], []),
+    'getAllMatches' : IDL.Func([], [IDL.Vec(Match)], ['query']),
+    'saveMatch' : IDL.Func(
+        [IDL.Text, IDL.Nat, IDL.Text, IDL.Nat, IDL.Nat, IDL.Nat],
+        [],
+        [],
+      ),
   });
 };
 

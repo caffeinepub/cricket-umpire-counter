@@ -10,15 +10,21 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface MatchState {
+export interface Match {
+  'team1' : Team,
+  'team2' : Team,
   'overs' : bigint,
-  'runs' : bigint,
-  'wickets' : bigint,
+  'date' : Time,
   'balls' : bigint,
 }
+export interface Team { 'name' : string, 'score' : bigint }
+export type Time = bigint;
 export interface _SERVICE {
-  'getSavedMatchState' : ActorMethod<[], MatchState>,
-  'saveMatchState' : ActorMethod<[bigint, bigint, bigint, bigint], undefined>,
+  'getAllMatches' : ActorMethod<[], Array<Match>>,
+  'saveMatch' : ActorMethod<
+    [string, bigint, string, bigint, bigint, bigint],
+    undefined
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

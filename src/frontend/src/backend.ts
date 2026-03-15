@@ -89,43 +89,49 @@ export class ExternalBlob {
         return this;
     }
 }
-export interface MatchState {
+export type Time = bigint;
+export interface Match {
+    team1: Team;
+    team2: Team;
     overs: bigint;
-    runs: bigint;
-    wickets: bigint;
+    date: Time;
     balls: bigint;
 }
+export interface Team {
+    name: string;
+    score: bigint;
+}
 export interface backendInterface {
-    getSavedMatchState(): Promise<MatchState>;
-    saveMatchState(runs: bigint, wickets: bigint, overs: bigint, balls: bigint): Promise<void>;
+    getAllMatches(): Promise<Array<Match>>;
+    saveMatch(team1Name: string, team1Score: bigint, team2Name: string, team2Score: bigint, overs: bigint, balls: bigint): Promise<void>;
 }
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
-    async getSavedMatchState(): Promise<MatchState> {
+    async getAllMatches(): Promise<Array<Match>> {
         if (this.processError) {
             try {
-                const result = await this.actor.getSavedMatchState();
+                const result = await this.actor.getAllMatches();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getSavedMatchState();
+            const result = await this.actor.getAllMatches();
             return result;
         }
     }
-    async saveMatchState(arg0: bigint, arg1: bigint, arg2: bigint, arg3: bigint): Promise<void> {
+    async saveMatch(arg0: string, arg1: bigint, arg2: string, arg3: bigint, arg4: bigint, arg5: bigint): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.saveMatchState(arg0, arg1, arg2, arg3);
+                const result = await this.actor.saveMatch(arg0, arg1, arg2, arg3, arg4, arg5);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.saveMatchState(arg0, arg1, arg2, arg3);
+            const result = await this.actor.saveMatch(arg0, arg1, arg2, arg3, arg4, arg5);
             return result;
         }
     }

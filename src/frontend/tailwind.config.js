@@ -18,7 +18,6 @@ export default {
       fontFamily: {
         display: ["Bricolage Grotesque", "sans-serif"],
         body: ["Figtree", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
         border: "oklch(var(--border))",
@@ -46,41 +45,6 @@ export default {
           DEFAULT: "oklch(var(--accent) / <alpha-value>)",
           foreground: "oklch(var(--accent-foreground))",
         },
-        /* Boundary warm amber */
-        boundary: {
-          DEFAULT: "oklch(var(--boundary) / <alpha-value>)",
-          foreground: "oklch(var(--boundary-foreground))",
-        },
-        /* Wide: blue */
-        "blue-extra": {
-          DEFAULT: "oklch(var(--blue-extra) / <alpha-value>)",
-          foreground: "oklch(var(--blue-extra-foreground))",
-        },
-        /* No Ball: amber-brown */
-        "noball-extra": {
-          DEFAULT: "oklch(var(--noball-extra) / <alpha-value>)",
-          foreground: "oklch(var(--noball-extra-foreground))",
-        },
-        /* Bye: teal */
-        "teal-extra": {
-          DEFAULT: "oklch(var(--teal-extra) / <alpha-value>)",
-          foreground: "oklch(var(--teal-extra-foreground))",
-        },
-        /* Leg Bye: dark green */
-        "bye-extra": {
-          DEFAULT: "oklch(var(--bye-extra) / <alpha-value>)",
-          foreground: "oklch(var(--bye-extra-foreground))",
-        },
-        /* Undo dark forest green */
-        "undo-btn": {
-          DEFAULT: "oklch(var(--undo-btn) / <alpha-value>)",
-          foreground: "oklch(var(--undo-btn-foreground))",
-        },
-        /* Reset dark maroon */
-        "reset-btn": {
-          DEFAULT: "oklch(var(--reset-btn) / <alpha-value>)",
-          foreground: "oklch(var(--reset-btn-foreground))",
-        },
         popover: {
           DEFAULT: "oklch(var(--popover))",
           foreground: "oklch(var(--popover-foreground))",
@@ -88,6 +52,19 @@ export default {
         card: {
           DEFAULT: "oklch(var(--card))",
           foreground: "oklch(var(--card-foreground))",
+        },
+        cricket: {
+          green: "oklch(0.55 0.22 145)",
+          "dark-green": "oklch(0.28 0.14 155)",
+          amber: "oklch(0.78 0.20 70)",
+          "amber-warm": "oklch(0.70 0.22 68)",
+          red: "oklch(0.52 0.25 20)",
+          blue: "oklch(0.56 0.25 255)",
+          teal: "oklch(0.64 0.18 180)",
+          grey: "oklch(0.38 0.04 255)",
+          "dark-red": "oklch(0.42 0.20 15)",
+          forest: "oklch(0.50 0.18 147)",
+          lime: "oklch(0.60 0.22 130)",
         },
         chart: {
           1: "oklch(var(--chart-1))",
@@ -113,9 +90,15 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        xs: "0 1px 2px 0 rgba(0,0,0,0.04)",
-        card: "0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.06)",
-        btn: "0 2px 4px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.08)",
+        btn: "0 4px 14px rgba(0,0,0,0.3)",
+        card: "0 2px 20px rgba(0,0,0,0.4)",
+        scoreboard: "0 8px 48px rgba(0,0,0,0.6), 0 0 40px rgba(0,200,80,0.12)",
+        "neon-green": "0 0 20px oklch(0.55 0.22 145 / 0.60), 0 4px 14px oklch(0.55 0.22 145 / 0.35)",
+        "neon-amber": "0 0 22px oklch(0.78 0.20 70 / 0.60), 0 4px 16px oklch(0.78 0.20 70 / 0.40)",
+        "neon-red": "0 0 24px oklch(0.52 0.25 20 / 0.65), 0 4px 20px oklch(0.52 0.25 20 / 0.45)",
+        "neon-blue": "0 0 18px oklch(0.56 0.25 255 / 0.50), 0 4px 12px oklch(0.56 0.25 255 / 0.35)",
+        "neon-teal": "0 0 18px oklch(0.64 0.18 180 / 0.50), 0 4px 12px oklch(0.64 0.18 180 / 0.35)",
+        glass: "0 4px 24px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
       },
       keyframes: {
         "accordion-down": {
@@ -128,14 +111,19 @@ export default {
         },
         "score-pop": {
           "0%": { transform: "scale(1)" },
-          "50%": { transform: "scale(1.1)" },
+          "50%": { transform: "scale(1.13)" },
           "100%": { transform: "scale(1)" },
+        },
+        "wicket-pulse": {
+          "0%, 100%": { boxShadow: "0 0 18px oklch(0.52 0.25 20 / 0.50), 0 4px 16px oklch(0.52 0.25 20 / 0.35)" },
+          "50%": { boxShadow: "0 0 36px oklch(0.58 0.28 18 / 0.80), 0 0 52px oklch(0.52 0.25 20 / 0.35), 0 4px 20px oklch(0.52 0.25 20 / 0.55)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "score-pop": "score-pop 0.22s ease-in-out",
+        "score-pop": "score-pop 0.25s ease-in-out",
+        "wicket-pulse": "wicket-pulse 2.2s ease-in-out infinite",
       },
     },
   },

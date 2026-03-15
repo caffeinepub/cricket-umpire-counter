@@ -7,13 +7,19 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
-export interface MatchState {
+export type Time = bigint;
+export interface Match {
+    team1: Team;
+    team2: Team;
     overs: bigint;
-    runs: bigint;
-    wickets: bigint;
+    date: Time;
     balls: bigint;
 }
+export interface Team {
+    name: string;
+    score: bigint;
+}
 export interface backendInterface {
-    getSavedMatchState(): Promise<MatchState>;
-    saveMatchState(runs: bigint, wickets: bigint, overs: bigint, balls: bigint): Promise<void>;
+    getAllMatches(): Promise<Array<Match>>;
+    saveMatch(team1Name: string, team1Score: bigint, team2Name: string, team2Score: bigint, overs: bigint, balls: bigint): Promise<void>;
 }
