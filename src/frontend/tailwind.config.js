@@ -91,8 +91,8 @@ export default {
       },
       boxShadow: {
         btn: "0 4px 14px rgba(0,0,0,0.3)",
-        card: "0 2px 20px rgba(0,0,0,0.4)",
-        scoreboard: "0 8px 48px rgba(0,0,0,0.6), 0 0 40px rgba(0,200,80,0.12)",
+        card: "0 4px 28px rgba(0,0,0,0.55), 0 0 0 1px oklch(0.55 0.22 145 / 0.12)",
+        scoreboard: "0 8px 48px rgba(0,0,0,0.6), 0 0 60px rgba(0,200,80,0.18)",
         "neon-green": "0 0 20px oklch(0.55 0.22 145 / 0.60), 0 4px 14px oklch(0.55 0.22 145 / 0.35)",
         "neon-amber": "0 0 22px oklch(0.78 0.20 70 / 0.60), 0 4px 16px oklch(0.78 0.20 70 / 0.40)",
         "neon-red": "0 0 24px oklch(0.52 0.25 20 / 0.65), 0 4px 20px oklch(0.52 0.25 20 / 0.45)",

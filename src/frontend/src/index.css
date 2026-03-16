@@ -6,63 +6,60 @@
 
 @layer base {
   :root {
-    /* ── Midnight Cricket Stadium — Dark Theme ── */
-    --background: 0.1 0.022 255;
-    --foreground: 0.88 0.018 120;
-    --card: 0.14 0.025 255;
-    --card-foreground: 0.88 0.018 120;
-    --popover: 0.14 0.025 255;
-    --popover-foreground: 0.88 0.018 120;
+    /* ── Vivid Stadium Night Theme ── */
+    --background: 0.1 0.04 240;
+    --foreground: 0.97 0.005 120;
+    --card: 0.14 0.05 235;
+    --card-foreground: 0.97 0.005 120;
+    --popover: 0.14 0.05 235;
+    --popover-foreground: 0.97 0.005 120;
 
-    /* Electric green primary */
-    --primary: 0.55 0.22 145;
-    --primary-foreground: 0.08 0.015 255;
+    --primary: 0.65 0.26 145;
+    --primary-foreground: 1 0 0;
 
-    --secondary: 0.17 0.03 255;
-    --secondary-foreground: 0.78 0.015 120;
+    --secondary: 0.18 0.06 235;
+    --secondary-foreground: 0.85 0.01 120;
 
-    --muted: 0.17 0.03 255;
-    --muted-foreground: 0.52 0.04 200;
+    --muted: 0.2 0.05 235;
+    --muted-foreground: 0.55 0.04 220;
 
-    /* Amber accent */
-    --accent: 0.78 0.2 70;
-    --accent-foreground: 0.1 0.022 255;
+    --accent: 0.18 0.06 235;
+    --accent-foreground: 0.85 0.01 120;
 
-    /* Crimson destructive */
-    --destructive: 0.52 0.25 20;
-    --destructive-foreground: 0.99 0.005 100;
+    --destructive: 0.56 0.27 20;
+    --destructive-foreground: 1 0 0;
 
-    --border: 0.22 0.03 255;
-    --input: 0.18 0.028 255;
-    --ring: 0.55 0.22 145;
+    --border: 0.3 0.07 235;
+    --input: 0.18 0.05 235;
+    --ring: 0.65 0.26 145;
     --radius: 0.75rem;
 
-    /* Cricket-specific tokens */
+    /* Cricket tokens */
     --cricket-dark-green: 0.28 0.14 155;
-    --cricket-green: 0.55 0.22 145;
-    --cricket-amber: 0.78 0.2 70;
-    --cricket-red: 0.52 0.25 20;
-    --cricket-blue: 0.56 0.25 255;
-    --cricket-teal: 0.64 0.18 180;
+    --cricket-green: 0.65 0.26 145;
+    --cricket-amber: 0.82 0.22 75;
+    --cricket-red: 0.55 0.27 20;
+    --cricket-blue: 0.6 0.27 255;
+    --cricket-teal: 0.68 0.22 180;
     --cricket-grey: 0.38 0.04 255;
-    --cricket-dark-red: 0.42 0.2 15;
-    --cricket-forest: 0.5 0.18 147;
-    --cricket-lime: 0.6 0.22 130;
+    --cricket-dark-red: 0.44 0.22 15;
+    --cricket-forest: 0.52 0.2 147;
+    --cricket-lime: 0.65 0.26 130;
 
-    --chart-1: 0.55 0.22 145;
-    --chart-2: 0.78 0.2 70;
-    --chart-3: 0.52 0.25 20;
-    --chart-4: 0.56 0.25 255;
-    --chart-5: 0.64 0.18 180;
+    --chart-1: 0.65 0.26 145;
+    --chart-2: 0.82 0.22 75;
+    --chart-3: 0.55 0.27 20;
+    --chart-4: 0.6 0.27 255;
+    --chart-5: 0.68 0.22 180;
 
-    --sidebar: 0.12 0.022 255;
-    --sidebar-foreground: 0.88 0.018 120;
-    --sidebar-primary: 0.55 0.22 145;
-    --sidebar-primary-foreground: 0.08 0.015 255;
-    --sidebar-accent: 0.17 0.03 255;
-    --sidebar-accent-foreground: 0.78 0.015 120;
-    --sidebar-border: 0.22 0.03 255;
-    --sidebar-ring: 0.55 0.22 145;
+    --sidebar: 0.1 0.04 240;
+    --sidebar-foreground: 0.97 0.005 120;
+    --sidebar-primary: 0.65 0.26 145;
+    --sidebar-primary-foreground: 1 0 0;
+    --sidebar-accent: 0.18 0.06 235;
+    --sidebar-accent-foreground: 0.85 0.01 120;
+    --sidebar-border: 0.3 0.07 235;
+    --sidebar-ring: 0.65 0.26 145;
   }
 }
 
@@ -70,240 +67,249 @@
   * {
     @apply border-border;
   }
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    min-height: 100vh;
+  }
   body {
     @apply bg-background text-foreground;
     font-family: "Figtree", sans-serif;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     overscroll-behavior: none;
-    /* Subtle noise texture overlay for depth */
-    background-image: radial-gradient(
-        ellipse at 20% 10%,
-        oklch(0.18 0.05 145 / 0.15) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        ellipse at 80% 90%,
-        oklch(0.14 0.04 255 / 0.2) 0%,
-        transparent 50%
-      );
-    background-attachment: fixed;
+    /* Rich deep multi-color gradient — no white anywhere */
+    background: linear-gradient(
+        160deg,
+        #060d1f 0%,
+        #071b10 40%,
+        #130820 80%,
+        #060d1f 100%
+      )
+      fixed;
+    min-height: 100vh;
   }
-
-  html,
-  body,
   #root {
-    height: 100%;
-    width: 100%;
+    background: transparent;
   }
 }
 
-/* ── Scoreboard — Rich deep forest gradient with neon top border ── */
-.cricket-scoreboard {
-  background: linear-gradient(160deg, #021a0e 0%, #042614 45%, #0a3d1f 100%);
-  border-top: 2px solid rgba(0, 220, 110, 0.35);
-  box-shadow: 0 0 40px rgba(0, 200, 80, 0.12), 0 8px 48px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(0, 255, 120, 0.08);
+/* ── Full-screen panel base — ensures dark bg even on tall scrolls ── */
+.panel-bg {
+  background: linear-gradient(160deg, #060d1f 0%, #071b10 45%, #130820 100%);
+  min-height: 100vh;
 }
 
-/* ── Run button — electric neon green ── */
+/* ── Scoreboard — Rich cricket green gradient ── */
+.cricket-scoreboard {
+  background: linear-gradient(145deg, #083d23 0%, #0f6b40 50%, #198754 100%);
+  border-bottom: 2px solid rgba(34, 197, 94, 0.4);
+  box-shadow: 0 4px 32px rgba(15, 107, 64, 0.6), 0 8px 64px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Scoreboard title ── */
+.scoreboard-title {
+  letter-spacing: 0.12em;
+}
+
+/* ── Run button — vivid electric green ── */
 .btn-run {
-  background: linear-gradient(
-    145deg,
-    oklch(0.55 0.22 145) 0%,
-    oklch(0.46 0.22 145) 100%
-  );
+  background: linear-gradient(145deg, #16a34a, #22c55e);
   color: #ffffff;
-  box-shadow: 0 0 18px oklch(0.55 0.22 145 / 0.55), 0 4px 14px
-    oklch(0.55 0.22 145 / 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 18px rgba(34, 197, 94, 0.55), 0 0 0 1px
+    rgba(34, 197, 94, 0.3);
+  border: none;
 }
 
 .btn-run:hover {
-  box-shadow: 0 0 28px oklch(0.55 0.22 145 / 0.7), 0 6px 20px
-    oklch(0.55 0.22 145 / 0.45);
+  background: linear-gradient(145deg, #15803d, #16a34a);
+  box-shadow: 0 6px 24px rgba(34, 197, 94, 0.7), 0 0 0 1px
+    rgba(34, 197, 94, 0.4);
 }
 
-/* ── Boundary button — glowing saffron gold ── */
+.btn-run:active {
+  background: #15803d;
+  transform: scale(0.95);
+}
+
+/* ── Boundary button — brilliant blazing gold ── */
 .btn-boundary {
-  background: linear-gradient(
-    145deg,
-    oklch(0.82 0.2 70) 0%,
-    oklch(0.7 0.22 68) 100%
-  );
+  background: linear-gradient(145deg, #d97706, #f59e0b, #fbbf24);
   color: #1a0a00;
-  box-shadow: 0 0 22px oklch(0.78 0.2 70 / 0.6), 0 4px 16px
-    oklch(0.78 0.2 70 / 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  font-weight: 800;
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.65), 0 0 0 1px
+    rgba(251, 191, 36, 0.4);
+  border: none;
 }
 
 .btn-boundary:hover {
-  box-shadow: 0 0 32px oklch(0.78 0.2 70 / 0.75), 0 6px 22px
-    oklch(0.78 0.2 70 / 0.55);
+  background: linear-gradient(145deg, #b45309, #d97706, #f59e0b);
+  box-shadow: 0 6px 28px rgba(245, 158, 11, 0.8), 0 0 0 1px
+    rgba(245, 158, 11, 0.5);
 }
 
-/* ── Wicket button — deep crimson with pulsing glow ── */
+/* ── Wicket button — blazing crimson ── */
 .btn-wicket {
-  background: linear-gradient(
-    145deg,
-    oklch(0.55 0.26 20) 0%,
-    oklch(0.44 0.26 18) 100%
-  );
+  background: linear-gradient(145deg, #991b1b, #dc2626, #ef4444);
   color: #ffffff;
-  box-shadow: 0 0 24px oklch(0.52 0.25 20 / 0.65), 0 4px 20px
-    oklch(0.52 0.25 20 / 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  animation: wicket-glow 2.2s ease-in-out infinite;
+  box-shadow: 0 4px 22px rgba(220, 38, 38, 0.65), 0 0 0 1px
+    rgba(239, 68, 68, 0.4);
+  border: none;
+}
+
+.btn-wicket:hover {
+  background: linear-gradient(145deg, #7f1d1d, #991b1b, #dc2626);
+  box-shadow: 0 6px 32px rgba(220, 38, 38, 0.8);
 }
 
 /* ── Extras ── */
 .btn-wide {
-  background: linear-gradient(
-    145deg,
-    oklch(0.58 0.25 255) 0%,
-    oklch(0.48 0.26 258) 100%
-  );
+  background: linear-gradient(145deg, #1d4ed8, #3b82f6);
   color: #ffffff;
-  box-shadow: 0 0 18px oklch(0.56 0.25 255 / 0.5), 0 4px 12px
-    oklch(0.56 0.25 255 / 0.35);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.55), 0 0 0 1px
+    rgba(96, 165, 250, 0.3);
+  border: none;
+}
+
+.btn-wide:hover {
+  background: linear-gradient(145deg, #1e40af, #1d4ed8);
+  box-shadow: 0 6px 22px rgba(59, 130, 246, 0.7);
 }
 
 .btn-noball {
-  background: linear-gradient(
-    145deg,
-    oklch(0.78 0.2 65) 0%,
-    oklch(0.67 0.22 64) 100%
-  );
-  color: #1a0a00;
-  box-shadow: 0 0 18px oklch(0.75 0.2 65 / 0.5), 0 4px 12px
-    oklch(0.75 0.2 65 / 0.35);
+  background: linear-gradient(145deg, #c2410c, #f97316, #fb923c);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.55), 0 0 0 1px
+    rgba(251, 146, 60, 0.3);
+  border: none;
+}
+
+.btn-noball:hover {
+  background: linear-gradient(145deg, #9a3412, #c2410c, #ea580c);
+  box-shadow: 0 6px 22px rgba(249, 115, 22, 0.7);
 }
 
 .btn-bye {
-  background: linear-gradient(
-    145deg,
-    oklch(0.67 0.18 180) 0%,
-    oklch(0.56 0.19 178) 100%
-  );
+  background: linear-gradient(145deg, #0f766e, #14b8a6, #2dd4bf);
   color: #ffffff;
-  box-shadow: 0 0 18px oklch(0.64 0.18 180 / 0.5), 0 4px 12px
-    oklch(0.64 0.18 180 / 0.35);
+  box-shadow: 0 4px 16px rgba(20, 184, 166, 0.55), 0 0 0 1px
+    rgba(45, 212, 191, 0.3);
+  border: none;
+}
+
+.btn-bye:hover {
+  background: linear-gradient(145deg, #134e4a, #0f766e, #0d9488);
+  box-shadow: 0 6px 22px rgba(20, 184, 166, 0.7);
 }
 
 .btn-legbye {
-  background: linear-gradient(
-    145deg,
-    oklch(0.62 0.22 130) 0%,
-    oklch(0.52 0.22 130) 100%
-  );
+  background: linear-gradient(145deg, #15803d, #22c55e);
   color: #ffffff;
-  box-shadow: 0 0 18px oklch(0.6 0.22 130 / 0.5), 0 4px 12px
-    oklch(0.6 0.22 130 / 0.35);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.45), 0 0 0 1px
+    rgba(74, 222, 128, 0.3);
+  border: none;
+}
+
+.btn-legbye:hover {
+  background: linear-gradient(145deg, #166534, #15803d);
+  box-shadow: 0 6px 22px rgba(34, 197, 94, 0.6);
 }
 
 /* ── Undo / Reset ── */
 .btn-undo {
-  background: linear-gradient(
-    145deg,
-    oklch(0.4 0.04 255) 0%,
-    oklch(0.3 0.04 255) 100%
-  );
+  background: linear-gradient(145deg, #374151, #4b5563);
   color: #ffffff;
-  box-shadow: 0 0 14px oklch(0.38 0.04 255 / 0.4), 0 4px 10px
-    rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 12px rgba(75, 85, 99, 0.5);
+  border: none;
+}
+
+.btn-undo:hover {
+  background: linear-gradient(145deg, #1f2937, #374151);
 }
 
 .btn-reset {
-  background: linear-gradient(
-    145deg,
-    oklch(0.44 0.22 15) 0%,
-    oklch(0.35 0.22 14) 100%
-  );
+  background: linear-gradient(145deg, #7f1d1d, #991b1b);
   color: #ffffff;
-  box-shadow: 0 0 18px oklch(0.42 0.2 15 / 0.55), 0 4px 12px
-    oklch(0.42 0.2 15 / 0.4);
+  box-shadow: 0 2px 12px rgba(153, 27, 27, 0.55);
+  border: none;
 }
 
-/* ── Player stats toggle accent ── */
+.btn-reset:hover {
+  background: linear-gradient(145deg, #450a0a, #7f1d1d);
+}
+
+/* ── Player stats toggle ── */
 .btn-stats-toggle {
-  border-left: 3px solid oklch(0.55 0.22 145);
+  border-left: 3px solid #22c55e;
+}
+
+/* ── Cricket card — vivid dark glass with colored glow ── */
+.cricket-card {
+  background: linear-gradient(
+    145deg,
+    rgba(6, 20, 10, 0.92),
+    rgba(10, 15, 35, 0.88)
+  );
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 /* ── Tap feedback ── */
 .btn-tap {
-  transition: transform 0.1s ease, opacity 0.1s ease, box-shadow 0.1s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease, box-shadow 0.15s ease;
 }
 
 .btn-tap:active {
   transform: scale(0.93);
   opacity: 0.88;
-  box-shadow: none;
 }
 
-/* ── Glassmorphism cards ── */
-.glass-card {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: oklch(0.14 0.025 255 / 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0
-    rgba(255, 255, 255, 0.05);
-}
-
-/* ── Input fields — dark with green glow on focus ── */
+/* ── Input fields — dark glass ── */
 input[type="text"],
 input[type="number"],
 select {
-  background-color: oklch(0.16 0.028 255) !important;
-  border: 1px solid oklch(0.28 0.04 255) !important;
-  color: oklch(0.88 0.018 120) !important;
+  background-color: rgba(6, 20, 10, 0.8) !important;
+  border: 1.5px solid rgba(34, 197, 94, 0.35) !important;
+  color: #ffffff !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus,
 select:focus {
-  border-color: oklch(0.55 0.22 145) !important;
-  box-shadow: 0 0 0 3px oklch(0.55 0.22 145 / 0.25), 0 0 16px
-    oklch(0.55 0.22 145 / 0.15) !important;
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3) !important;
   outline: none !important;
+  background-color: rgba(10, 30, 15, 0.9) !important;
 }
 
 input::placeholder {
-  color: oklch(0.52 0.04 200) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
 }
 
 /* ── Over preset chips ── */
 .chip-overs {
-  background: oklch(0.16 0.028 255);
-  border: 1.5px solid oklch(0.55 0.22 145 / 0.45);
-  color: oklch(0.75 0.1 145);
+  background: rgba(6, 20, 10, 0.7);
+  border: 1.5px solid rgba(34, 197, 94, 0.3);
+  color: rgba(255, 255, 255, 0.6);
   transition: all 0.15s ease;
 }
 
 .chip-overs:hover,
 .chip-overs.active,
 .chip-overs[data-active="true"] {
-  background: oklch(0.55 0.22 145);
-  border-color: oklch(0.55 0.22 145);
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  border-color: #22c55e;
   color: #fff;
-  box-shadow: 0 0 14px oklch(0.55 0.22 145 / 0.55);
+  box-shadow: 0 3px 16px rgba(34, 197, 94, 0.6);
 }
 
-/* ── Ball dot glow ── */
+/* ── Ball dot ── */
 .ball-dot-filled {
-  text-shadow: 0 0 12px #fbbf24, 0 0 24px rgba(251, 191, 36, 0.5);
   color: #fbbf24;
-}
-
-/* ── Animated wicket glow ── */
-@keyframes wicket-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 18px oklch(0.52 0.25 20 / 0.5), 0 4px 16px
-      oklch(0.52 0.25 20 / 0.35);
-  }
-  50% {
-    box-shadow: 0 0 32px oklch(0.58 0.28 18 / 0.8), 0 0 48px
-      oklch(0.52 0.25 20 / 0.35), 0 4px 20px oklch(0.52 0.25 20 / 0.55);
-  }
 }
 
 /* ── Score pop animation ── */
@@ -321,4 +327,53 @@ input::placeholder {
 
 .animate-score-pop {
   animation: score-pop 0.25s ease-in-out;
+}
+
+/* ── Target info bar ── */
+.target-info-bar {
+  background: linear-gradient(135deg, #071b10 0%, #0d3d22 50%, #0f5132 100%);
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 4px 24px rgba(15, 81, 50, 0.5), 0 0 0 1px rgba(34, 197, 94, 0.3);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* ── Innings break screen ── */
+.innings-break-card {
+  background: linear-gradient(160deg, #083d23 0%, #0f5132 50%, #198754 100%);
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 8px 48px rgba(15, 81, 50, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.3);
+  border-top: 3px solid #f59e0b;
+}
+
+/* ── Result screen ── */
+.result-card {
+  background: linear-gradient(160deg, #083d23 0%, #0f5132 50%, #198754 100%);
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 8px 48px rgba(15, 81, 50, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.3);
+  border-top: 3px solid #f59e0b;
+}
+
+/* ── Scrollable main area ── */
+main {
+  background: transparent;
+}
+
+/* ── Section dividers ── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(34, 197, 94, 0.3),
+    transparent
+  );
 }

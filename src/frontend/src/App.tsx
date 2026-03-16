@@ -7,7 +7,7 @@ import { useGetAllMatches, useSaveMatch } from "./hooks/useQueries";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Screen = "setup" | "scoring" | "history";
+type Screen = "setup" | "scoring" | "innings-break" | "result" | "history";
 
 interface BatsmanStats {
   name: string;
@@ -35,6 +35,13 @@ interface MatchState {
   bowler: BowlerStats;
 }
 
+interface Innings1Result {
+  runs: number;
+  wickets: number;
+  legalBalls: number;
+  totalOvers: number;
+}
+
 interface HistoryEntry {
   type: "run" | "wicket" | "wide" | "noball" | "bye" | "legbye";
   runs: number;
@@ -58,6 +65,9 @@ interface LocalMatch {
   wickets: number;
   overs: number;
   balls: number;
+  team2Runs?: number;
+  team2Wickets?: number;
+  result?: string;
   date: string;
 }
 
@@ -111,6 +121,19 @@ function getRunRate(runs: number, legalBalls: number) {
   return ((runs / legalBalls) * 6).toFixed(2);
 }
 
+function getRequiredRunRate(
+  target: number,
+  runs: number,
+  legalBalls: number,
+  totalOvers: number,
+) {
+  const remainingRuns = target - runs;
+  const remainingBalls = totalOvers * 6 - legalBalls;
+  if (remainingBalls <= 0) return "0.00";
+  if (remainingRuns <= 0) return "0.00";
+  return ((remainingRuns / remainingBalls) * 6).toFixed(2);
+}
+
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -131,9 +154,7 @@ function BallDots({ legalBalls }: { legalBalls: number }) {
           className="text-xl leading-none transition-all duration-200"
           style={{
             color:
-              i < ballsInCurrentOver ? "#F59E0B" : "rgba(255,255,255,0.35)",
-            textShadow:
-              i < ballsInCurrentOver ? "0 0 8px rgba(245,158,11,0.6)" : "none",
+              i < ballsInCurrentOver ? "#F59E0B" : "rgba(255,255,255,0.28)",
           }}
         >
           {i < ballsInCurrentOver ? "●" : "○"}
@@ -189,21 +210,22 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
   return (
     <div
       data-ocid="match.setup.panel"
-      className="flex flex-col min-h-screen bg-background"
+      className="panel-bg flex flex-col min-h-screen"
     >
       {/* Header */}
-      <header className="cricket-scoreboard px-4 py-5 shadow-scoreboard">
+      <header className="cricket-scoreboard px-4 py-5">
         <div className="flex items-center justify-between max-w-[480px] mx-auto">
           <div>
-            <h1 className="font-display text-2xl font-bold text-white tracking-wide">
-              CRICKET UMPIRE
+            <h1 className="scoreboard-title font-display text-2xl font-bold text-white tracking-wide">
+              🏏 CRICKET UMPIRE
             </h1>
             <p className="text-white/60 text-sm mt-0.5">Match Setup</p>
           </div>
           <button
             type="button"
             onClick={onHistory}
-            className="btn-tap text-white/70 hover:text-white p-2 rounded-xl"
+            data-ocid="setup.history.button"
+            className="btn-tap text-white/60 hover:text-white p-2 rounded-xl"
             aria-label="Match History"
           >
             <History size={24} />
@@ -213,15 +235,19 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
 
       {/* Form */}
       <main className="flex-1 flex flex-col gap-5 px-4 py-6 max-w-[480px] mx-auto w-full">
-        <div className="bg-card rounded-2xl shadow-card p-5 flex flex-col gap-4 border border-border">
-          <h2 className="font-display text-lg font-semibold text-foreground">
-            New Match
+        <div className="cricket-card rounded-2xl p-5 flex flex-col gap-4">
+          <h2
+            className="font-display text-lg font-semibold"
+            style={{ color: "#f59e0b" }}
+          >
+            ✦ New Match
           </h2>
 
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="teamA"
-              className="text-sm font-medium text-foreground/70"
+              className="text-sm font-medium"
+              style={{ color: "rgba(255,255,255,0.75)" }}
             >
               Team A
             </label>
@@ -232,14 +258,15 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
               value={teamA}
               onChange={(e) => setTeamA(e.target.value)}
               placeholder="Enter Team A name"
-              className="w-full px-4 py-3.5 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-cricket-green text-base"
+              className="w-full px-4 py-3.5 rounded-xl text-base"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="teamB"
-              className="text-sm font-medium text-foreground/70"
+              className="text-sm font-medium"
+              style={{ color: "rgba(255,255,255,0.75)" }}
             >
               Team B
             </label>
@@ -250,13 +277,16 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
               value={teamB}
               onChange={(e) => setTeamB(e.target.value)}
               placeholder="Enter Team B name"
-              className="w-full px-4 py-3.5 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-cricket-green text-base"
+              className="w-full px-4 py-3.5 rounded-xl text-base"
             />
           </div>
 
           {/* Total Overs */}
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-foreground/70">
+            <span
+              className="text-sm font-medium"
+              style={{ color: "rgba(255,255,255,0.75)" }}
+            >
               Total Overs
             </span>
 
@@ -270,15 +300,17 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
                     key={preset}
                     type="button"
                     onClick={() => handlePresetClick(preset)}
-                    className="btn-tap px-4 py-2 rounded-full text-sm font-semibold border shadow-sm transition-all"
+                    className="btn-tap px-4 py-2 rounded-full text-sm font-semibold transition-all"
                     style={{
                       background: isActive
-                        ? "linear-gradient(135deg, #16A34A 0%, #15803D 100%)"
-                        : "#fff",
-                      color: isActive ? "#fff" : "#15803D",
-                      borderColor: "#16A34A",
+                        ? "#22c55e"
+                        : "rgba(255,255,255,0.08)",
+                      color: isActive ? "#ffffff" : "rgba(255,255,255,0.65)",
+                      border: isActive
+                        ? "1.5px solid #22c55e"
+                        : "1.5px solid rgba(255,255,255,0.18)",
                       boxShadow: isActive
-                        ? "0 2px 10px rgba(21,128,61,0.35)"
+                        ? "0 3px 12px rgba(34,197,94,0.5)"
                         : "none",
                     }}
                     aria-pressed={isActive}
@@ -293,7 +325,8 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="customOvers"
-                className="text-xs text-muted-foreground"
+                className="text-xs"
+                style={{ color: "rgba(255,255,255,0.45)" }}
               >
                 Or enter custom overs:
               </label>
@@ -305,13 +338,13 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
                 value={customOvers}
                 onChange={handleCustomChange}
                 placeholder="e.g. 12, 15, 25"
-                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-cricket-green text-base"
+                className="w-full px-4 py-3 rounded-xl text-base"
               />
             </div>
 
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>
               Selected:{" "}
-              <span className="font-semibold text-cricket-green">
+              <span className="font-semibold" style={{ color: "#f59e0b" }}>
                 {finalOvers && !Number.isNaN(finalOvers) && finalOvers > 0
                   ? `${finalOvers} overs`
                   : "—"}
@@ -320,12 +353,15 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
           </div>
         </div>
 
-        {/* Player names */}
-        <div className="bg-card rounded-2xl shadow-card p-5 flex flex-col gap-4 border border-border">
-          <h2 className="font-display text-lg font-semibold text-foreground">
-            Players (Optional)
+        {/* Player names note */}
+        <div className="cricket-card rounded-2xl p-5 flex flex-col gap-2">
+          <h2
+            className="font-display text-lg font-semibold"
+            style={{ color: "#f59e0b" }}
+          >
+            ✦ Players (Optional)
           </h2>
-          <p className="text-sm text-muted-foreground -mt-2">
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
             You can set player names from the scoring screen.
           </p>
         </div>
@@ -336,21 +372,25 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
           onClick={handleStart}
           className="btn-tap w-full py-4 rounded-2xl text-white font-display font-bold text-lg"
           style={{
-            background: "linear-gradient(135deg, #0A3D26 0%, #16A34A 100%)",
-            boxShadow: "0 6px 20px rgba(10,61,38,0.45)",
+            background: "linear-gradient(135deg, #0f5132 0%, #22c55e 100%)",
+            boxShadow: "0 6px 24px rgba(34,197,94,0.45)",
           }}
         >
           🏏 Start Match
         </button>
       </main>
 
-      <footer className="text-center py-4 text-xs text-muted-foreground">
+      <footer
+        className="text-center py-4 text-xs"
+        style={{ color: "rgba(255,255,255,0.35)" }}
+      >
         © {new Date().getFullYear()}. Built with love using{" "}
         <a
           href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
+          style={{ color: "#22c55e" }}
         >
           caffeine.ai
         </a>
@@ -370,6 +410,8 @@ interface ScoringScreenProps {
   actionHistory: HistoryEntry[];
   onUndo: () => void;
   onPushHistory: (entry: HistoryEntry) => void;
+  chasingTarget?: number;
+  onInningsEnd?: () => void;
 }
 
 function ScoringScreen({
@@ -381,6 +423,8 @@ function ScoringScreen({
   actionHistory,
   onUndo,
   onPushHistory,
+  chasingTarget,
+  onInningsEnd,
 }: ScoringScreenProps) {
   const [showStats, setShowStats] = useState(false);
   const [editingField, setEditingField] = useState<string | null>(null);
@@ -391,8 +435,23 @@ function ScoringScreen({
   const currentBalls = match.legalBalls % 6;
   const oversDisplay = `${currentOvers}.${currentBalls}`;
   const runRate = getRunRate(match.runs, match.legalBalls);
+
+  const isChasing = chasingTarget !== undefined;
+  const targetReached = isChasing && match.runs >= chasingTarget!;
   const matchOver =
-    match.wickets >= 10 || match.legalBalls >= match.totalOvers * 6;
+    match.wickets >= 10 ||
+    match.legalBalls >= match.totalOvers * 6 ||
+    targetReached;
+
+  const runsNeeded = isChasing ? Math.max(0, chasingTarget! - match.runs) : 0;
+  const rrr = isChasing
+    ? getRequiredRunRate(
+        chasingTarget!,
+        match.runs,
+        match.legalBalls,
+        match.totalOvers,
+      )
+    : "";
 
   const popScore = () => {
     setScorePop(true);
@@ -509,14 +568,21 @@ function ScoringScreen({
   return (
     <div
       data-ocid="scoring.panel"
-      className="flex flex-col min-h-screen bg-background"
+      className="panel-bg flex flex-col min-h-screen"
     >
       {/* Header */}
-      <header className="cricket-scoreboard px-4 py-3 shadow-scoreboard">
+      <header className="cricket-scoreboard px-4 py-3">
         <div className="flex items-center justify-between max-w-[480px] mx-auto">
-          <h1 className="font-display text-xl font-bold text-white tracking-widest uppercase">
-            Cricket Umpire
-          </h1>
+          <div>
+            <h1 className="scoreboard-title font-display text-xl font-bold text-white uppercase">
+              {isChasing ? match.teamA : "Cricket Umpire"}
+            </h1>
+            {isChasing && (
+              <p className="text-white/60 text-xs mt-0.5">
+                {match.teamB} batting
+              </p>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             <span
               className="font-display text-2xl font-bold"
@@ -527,6 +593,7 @@ function ScoringScreen({
             <button
               type="button"
               onClick={onHistory}
+              data-ocid="scoring.history.button"
               className="btn-tap text-white/60 hover:text-white p-1.5"
               aria-label="History"
             >
@@ -538,12 +605,51 @@ function ScoringScreen({
 
       <main className="flex-1 overflow-y-auto pb-4">
         <div className="max-w-[480px] mx-auto px-3 flex flex-col gap-3 pt-3">
+          {/* Target info bar — only when chasing */}
+          {isChasing && (
+            <div className="target-info-bar">
+              <div className="text-center">
+                <p className="text-white/70 text-xs uppercase tracking-wider">
+                  Target
+                </p>
+                <p
+                  className="font-display font-bold text-xl"
+                  style={{ color: "#F59E0B" }}
+                >
+                  {chasingTarget}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-white/70 text-xs uppercase tracking-wider">
+                  Need
+                </p>
+                <p className="font-display font-bold text-xl text-white">
+                  {runsNeeded}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-white/70 text-xs uppercase tracking-wider">
+                  RRR
+                </p>
+                <p
+                  className="font-display font-bold text-xl"
+                  style={{ color: "#F59E0B" }}
+                >
+                  {rrr}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Scoreboard Card */}
-          <div className="cricket-scoreboard rounded-2xl shadow-scoreboard p-4 text-white">
+          <div className="cricket-scoreboard rounded-2xl p-4 text-white">
             <div className="flex items-start justify-between mb-2">
               <div>
-                <p className="text-white/60 text-xs font-medium tracking-wider uppercase">
-                  {match.teamA}
+                <p
+                  className="text-xs font-bold tracking-widest uppercase"
+                  style={{ color: "rgba(255,255,255,0.7)" }}
+                >
+                  {isChasing ? match.teamB : match.teamA}
                 </p>
                 <div
                   className={`font-display font-bold leading-none mt-1 transition-transform ${
@@ -558,7 +664,10 @@ function ScoringScreen({
                 <p className="text-white/60 text-xs uppercase tracking-wider">
                   Overs
                 </p>
-                <p className="font-display text-2xl font-bold mt-1">
+                <p
+                  className="font-display text-2xl font-bold mt-1"
+                  style={{ color: "#F59E0B" }}
+                >
                   {oversDisplay}
                 </p>
                 <p className="text-white/50 text-xs mt-0.5">RR: {runRate}</p>
@@ -567,12 +676,30 @@ function ScoringScreen({
             <BallDots legalBalls={match.legalBalls} />
             {matchOver && (
               <div className="mt-3 text-center">
-                <span className="bg-white/20 text-white text-sm font-semibold px-3 py-1 rounded-full">
-                  {match.wickets >= 10 ? "All Out" : "Innings Complete"}
+                <span
+                  className="text-sm font-semibold px-3 py-1 rounded-full"
+                  style={{
+                    background: "rgba(255,255,255,0.18)",
+                    color: "#fff",
+                  }}
+                >
+                  {targetReached
+                    ? "🏆 Target Reached!"
+                    : match.wickets >= 10
+                      ? "All Out"
+                      : "Innings Complete"}
                 </span>
               </div>
             )}
           </div>
+
+          {/* Section label: RUNS */}
+          <p
+            className="text-xs font-bold tracking-widest uppercase px-1"
+            style={{ color: "#f59e0b" }}
+          >
+            RUNS
+          </p>
 
           {/* Run Buttons */}
           <div className="grid grid-cols-3 gap-2">
@@ -636,11 +763,19 @@ function ScoringScreen({
             data-ocid="scoring.wicket.button"
             onClick={handleWicket}
             disabled={matchOver || match.wickets >= 10}
-            className="btn-tap btn-wicket w-full rounded-xl font-display font-bold text-xl disabled:opacity-40 animate-wicket-pulse"
+            className="btn-tap btn-wicket w-full rounded-xl font-display font-bold text-xl disabled:opacity-40"
             style={{ minHeight: "60px" }}
           >
             🏏 WICKET
           </button>
+
+          {/* Section label: EXTRAS */}
+          <p
+            className="text-xs font-bold tracking-widest uppercase px-1"
+            style={{ color: "#f59e0b" }}
+          >
+            EXTRAS (+1 RUN)
+          </p>
 
           {/* Extras Grid */}
           <div className="grid grid-cols-2 gap-2">
@@ -691,62 +826,108 @@ function ScoringScreen({
             type="button"
             data-ocid="scoring.stats.toggle"
             onClick={() => setShowStats((v) => !v)}
-            className="btn-tap btn-stats-toggle w-full flex items-center justify-between bg-card rounded-xl px-4 py-3 shadow-card text-foreground font-medium border border-border"
+            className="btn-tap btn-stats-toggle w-full flex items-center justify-between cricket-card rounded-xl px-4 py-3"
           >
-            <span>Player Stats</span>
-            {showStats ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            <span style={{ color: "#22c55e", fontWeight: 600 }}>
+              Player Stats
+            </span>
+            {showStats ? (
+              <ChevronUp size={18} style={{ color: "#22c55e" }} />
+            ) : (
+              <ChevronDown size={18} style={{ color: "#22c55e" }} />
+            )}
           </button>
 
           {/* Collapsible Player Stats */}
           {showStats && (
-            <div className="bg-card rounded-xl shadow-card p-4 flex flex-col gap-4 border border-border">
+            <div className="cricket-card rounded-xl p-4 flex flex-col gap-4">
               {/* Batsmen */}
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                <p
+                  className="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style={{ color: "#f59e0b" }}
+                >
                   Batsmen
                 </p>
                 {(["batsman1", "batsman2"] as const).map((key, idx) => {
                   const b = match[key];
-                  const nameField = idx === 0 ? "b1name" : "b2name";
+                  const field = key === "batsman1" ? "b1name" : "b2name";
                   return (
                     <div
                       key={key}
-                      className="flex items-center justify-between py-2 border-b border-border last:border-0"
+                      className="flex items-center justify-between py-2"
+                      style={{
+                        borderBottom:
+                          idx === 0
+                            ? "1px solid rgba(255,255,255,0.1)"
+                            : "none",
+                      }}
                     >
                       <div className="flex-1">
-                        {editingField === nameField ? (
+                        {editingField === field ? (
                           <input
+                            type="text"
                             value={tempVal}
                             onChange={(e) => setTempVal(e.target.value)}
-                            onBlur={() => commitEdit(nameField)}
+                            onBlur={() => commitEdit(field)}
                             onKeyDown={(e) =>
-                              e.key === "Enter" && commitEdit(nameField)
+                              e.key === "Enter" && commitEdit(field)
                             }
-                            className="text-sm font-medium border-b border-cricket-green outline-none bg-transparent w-32"
+                            className="w-full px-2 py-1 rounded-lg text-sm"
                           />
                         ) : (
                           <button
                             type="button"
-                            onClick={() => startEdit(nameField, b.name)}
-                            className="text-sm font-medium text-left"
+                            onClick={() =>
+                              startEdit(field, b.name || `Batsman ${idx + 1}`)
+                            }
+                            className="text-left text-sm font-medium"
+                            style={{ color: "rgba(255,255,255,0.85)" }}
                           >
                             {b.name || `Batsman ${idx + 1}`}{" "}
-                            <span className="text-xs text-muted-foreground">
+                            <span
+                              style={{
+                                color: "rgba(255,255,255,0.4)",
+                                fontSize: "0.7rem",
+                              }}
+                            >
                               ✎
                             </span>
                           </button>
                         )}
                       </div>
-                      <div className="flex gap-3 text-sm">
-                        <span className="font-bold text-cricket-green">
-                          {b.runs}
-                        </span>
-                        <span className="text-muted-foreground">
-                          ({b.balls})
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          SR {strikeRate(b.runs, b.balls)}
-                        </span>
+                      <div className="flex gap-4 text-right">
+                        <div>
+                          <p
+                            className="text-xs"
+                            style={{ color: "rgba(255,255,255,0.5)" }}
+                          >
+                            Runs
+                          </p>
+                          <p className="font-bold" style={{ color: "#22c55e" }}>
+                            {b.runs}
+                          </p>
+                        </div>
+                        <div>
+                          <p
+                            className="text-xs"
+                            style={{ color: "rgba(255,255,255,0.5)" }}
+                          >
+                            Balls
+                          </p>
+                          <p className="font-bold text-white">{b.balls}</p>
+                        </div>
+                        <div>
+                          <p
+                            className="text-xs"
+                            style={{ color: "rgba(255,255,255,0.5)" }}
+                          >
+                            SR
+                          </p>
+                          <p className="font-bold" style={{ color: "#f59e0b" }}>
+                            {strikeRate(b.runs, b.balls)}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   );
@@ -755,52 +936,88 @@ function ScoringScreen({
 
               {/* Bowler */}
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                <p
+                  className="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style={{ color: "#f59e0b" }}
+                >
                   Bowler
                 </p>
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     {editingField === "bowlername" ? (
                       <input
+                        type="text"
                         value={tempVal}
                         onChange={(e) => setTempVal(e.target.value)}
                         onBlur={() => commitEdit("bowlername")}
                         onKeyDown={(e) =>
                           e.key === "Enter" && commitEdit("bowlername")
                         }
-                        className="text-sm font-medium border-b border-cricket-green outline-none bg-transparent w-32"
+                        className="w-full px-2 py-1 rounded-lg text-sm"
                       />
                     ) : (
                       <button
                         type="button"
                         onClick={() =>
-                          startEdit("bowlername", match.bowler.name)
+                          startEdit("bowlername", match.bowler.name || "Bowler")
                         }
-                        className="text-sm font-medium text-left"
+                        className="text-left text-sm font-medium"
+                        style={{ color: "rgba(255,255,255,0.85)" }}
                       >
                         {match.bowler.name || "Bowler"}{" "}
-                        <span className="text-xs text-muted-foreground">✎</span>
+                        <span
+                          style={{
+                            color: "rgba(255,255,255,0.4)",
+                            fontSize: "0.7rem",
+                          }}
+                        >
+                          ✎
+                        </span>
                       </button>
                     )}
                   </div>
-                  <div className="flex gap-3 text-sm">
-                    <span className="text-muted-foreground">
-                      {formatOvers(match.bowler.balls)}
-                    </span>
-                    <span className="font-bold text-cricket-red">
-                      {match.bowler.runs}
-                    </span>
-                    <span className="text-muted-foreground">
-                      {match.bowler.wickets}W
-                    </span>
+                  <div className="flex gap-4 text-right">
+                    <div>
+                      <p
+                        className="text-xs"
+                        style={{ color: "rgba(255,255,255,0.5)" }}
+                      >
+                        Ov
+                      </p>
+                      <p className="font-bold text-white">
+                        {match.bowler.overs}.{match.bowler.balls % 6}
+                      </p>
+                    </div>
+                    <div>
+                      <p
+                        className="text-xs"
+                        style={{ color: "rgba(255,255,255,0.5)" }}
+                      >
+                        Runs
+                      </p>
+                      <p className="font-bold" style={{ color: "#22c55e" }}>
+                        {match.bowler.runs}
+                      </p>
+                    </div>
+                    <div>
+                      <p
+                        className="text-xs"
+                        style={{ color: "rgba(255,255,255,0.5)" }}
+                      >
+                        Wkts
+                      </p>
+                      <p className="font-bold" style={{ color: "#dc2626" }}>
+                        {match.bowler.wickets}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Undo + Reset */}
-          <div className="grid grid-cols-2 gap-2 pb-2">
+          {/* Undo / Reset */}
+          <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               data-ocid="scoring.undo.button"
@@ -809,44 +1026,337 @@ function ScoringScreen({
                 onUndo();
               }}
               disabled={actionHistory.length === 0}
-              className="btn-tap btn-undo rounded-xl font-display font-semibold text-lg disabled:opacity-40"
-              style={{ minHeight: "56px" }}
+              className="btn-tap btn-undo rounded-xl font-display font-semibold text-base disabled:opacity-40"
+              style={{ minHeight: "52px" }}
             >
               ↩ Undo
             </button>
             <button
               type="button"
-              data-ocid="scoring.reset.button"
+              data-ocid="scoring.reset.delete_button"
               onClick={() => {
                 vibrate();
                 onReset();
               }}
-              className="btn-tap btn-reset rounded-xl font-display font-semibold text-lg"
-              style={{ minHeight: "56px" }}
+              className="btn-tap btn-reset rounded-xl font-display font-semibold text-base"
+              style={{ minHeight: "52px" }}
             >
-              ⟳ Reset
+              ↺ Reset
             </button>
           </div>
 
-          {matchOver && (
+          {/* End innings CTA */}
+          {!matchOver && (
             <button
               type="button"
+              data-ocid="scoring.end-innings.secondary_button"
+              onClick={() => {
+                vibrate();
+                onInningsEnd?.();
+              }}
+              className="btn-tap w-full rounded-xl font-display font-semibold text-base"
+              style={{
+                background: "rgba(255,255,255,0.07)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                color: "rgba(255,255,255,0.7)",
+                minHeight: "48px",
+              }}
+            >
+              📋 End Innings Manually
+            </button>
+          )}
+
+          {/* CTA: See result after match over (chasing) */}
+          {matchOver && isChasing && (
+            <button
+              type="button"
+              data-ocid="scoring.result.primary_button"
+              onClick={() => {
+                vibrate();
+                onInningsEnd?.();
+              }}
+              className="btn-tap w-full py-4 rounded-2xl font-display font-bold text-xl text-white"
+              style={{
+                background: "linear-gradient(135deg, #0f5132 0%, #22c55e 100%)",
+                boxShadow: "0 6px 24px rgba(34,197,94,0.45)",
+              }}
+            >
+              🏆 See Match Result
+            </button>
+          )}
+
+          {/* Save match (solo innings — no 2nd innings) */}
+          {matchOver && !isChasing && (
+            <button
+              type="button"
+              data-ocid="scoring.save.secondary_button"
               onClick={() => {
                 vibrate();
                 onSave();
               }}
-              className="btn-tap w-full rounded-xl font-display font-bold text-lg text-white"
+              className="btn-tap w-full rounded-xl font-display font-semibold text-base"
               style={{
-                background: "linear-gradient(135deg, #0A3D26 0%, #16A34A 100%)",
-                boxShadow: "0 6px 20px rgba(10,61,38,0.45)",
-                minHeight: "56px",
+                background: "rgba(255,255,255,0.07)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                color: "rgba(255,255,255,0.7)",
+                minHeight: "48px",
               }}
             >
-              💾 Save Match
+              💾 Save & Exit (1st Innings Only)
             </button>
           )}
         </div>
       </main>
+    </div>
+  );
+}
+
+// ─── Innings Break Screen ─────────────────────────────────────────────────────
+
+interface InningsBreakScreenProps {
+  teamA: string;
+  teamB: string;
+  innings1Runs: number;
+  innings1Wickets: number;
+  innings1Overs: string;
+  totalOvers: number;
+  onStart2ndInnings: () => void;
+  onSaveAndExit: () => void;
+}
+
+function InningsBreakScreen({
+  teamA,
+  teamB,
+  innings1Runs,
+  innings1Wickets,
+  innings1Overs,
+  totalOvers,
+  onStart2ndInnings,
+  onSaveAndExit,
+}: InningsBreakScreenProps) {
+  const target = innings1Runs + 1;
+
+  return (
+    <div
+      data-ocid="innings-break.panel"
+      className="panel-bg flex flex-col min-h-screen items-center justify-center px-4 py-8"
+    >
+      <div className="max-w-[480px] w-full flex flex-col gap-5">
+        {/* Innings summary */}
+        <div className="innings-break-card text-center">
+          <div className="text-white/70 text-sm uppercase tracking-widest font-semibold mb-2">
+            Innings Complete
+          </div>
+          <div className="font-display font-bold text-3xl text-white mb-1">
+            {teamA}
+          </div>
+          <div
+            className="font-display font-bold"
+            style={{ fontSize: "3.5rem", color: "#F59E0B" }}
+          >
+            {innings1Runs}/{innings1Wickets}
+          </div>
+          <div className="text-white/70 text-sm mt-1">
+            {innings1Overs} overs
+          </div>
+
+          <div
+            className="mt-5 pt-4 border-t"
+            style={{ borderColor: "rgba(255,255,255,0.2)" }}
+          >
+            <p className="text-white/80 text-base">
+              <span className="font-bold text-white">{teamB}</span> needs{" "}
+              <span
+                className="font-display font-bold text-xl"
+                style={{ color: "#F59E0B" }}
+              >
+                {target} runs
+              </span>{" "}
+              in{" "}
+              <span className="font-bold text-white">{totalOvers} overs</span>{" "}
+              to win
+            </p>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <button
+          type="button"
+          data-ocid="innings-break.start2nd.primary_button"
+          onClick={onStart2ndInnings}
+          className="btn-tap w-full py-4 rounded-2xl font-display font-bold text-xl text-white"
+          style={{
+            background: "linear-gradient(135deg, #0f5132 0%, #22c55e 100%)",
+            boxShadow: "0 6px 24px rgba(34,197,94,0.45)",
+          }}
+        >
+          🏏 Start 2nd Innings
+        </button>
+
+        <button
+          type="button"
+          data-ocid="innings-break.save.secondary_button"
+          onClick={onSaveAndExit}
+          className="btn-tap w-full py-3 rounded-2xl font-semibold text-base"
+          style={{
+            background: "rgba(255,255,255,0.07)",
+            border: "1px solid rgba(255,255,255,0.18)",
+            color: "rgba(255,255,255,0.7)",
+          }}
+        >
+          💾 Save 1st Innings & Exit
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Match Result Screen ──────────────────────────────────────────────────────
+
+interface MatchResultScreenProps {
+  teamA: string;
+  teamB: string;
+  innings1: Innings1Result;
+  innings2Runs: number;
+  innings2Wickets: number;
+  innings2Balls: number;
+  onSave: () => void;
+  onNewMatch: () => void;
+}
+
+function MatchResultScreen({
+  teamA,
+  teamB,
+  innings1,
+  innings2Runs,
+  innings2Wickets,
+  innings2Balls,
+  onSave,
+  onNewMatch,
+}: MatchResultScreenProps) {
+  const target = innings1.runs + 1;
+  const won2nd = innings2Runs >= target;
+  const won1st = !won2nd;
+  const tied = innings2Runs === innings1.runs && innings2Wickets >= 10;
+
+  let resultText = "";
+  let resultEmoji = "🏆";
+  if (tied) {
+    resultText = "Match Tied!";
+    resultEmoji = "🤝";
+  } else if (won2nd) {
+    const wicketsLeft = 10 - innings2Wickets;
+    resultText = `${teamB} won by ${wicketsLeft} wicket${wicketsLeft !== 1 ? "s" : ""}`;
+  } else {
+    const runsMargin = innings1.runs - innings2Runs;
+    resultText = `${teamA} won by ${runsMargin} run${runsMargin !== 1 ? "s" : ""}`;
+    resultEmoji = won1st ? "🏆" : "🏆";
+  }
+
+  return (
+    <div
+      data-ocid="result.panel"
+      className="panel-bg flex flex-col min-h-screen items-center justify-center px-4 py-8"
+    >
+      <div className="max-w-[480px] w-full flex flex-col gap-5">
+        {/* Result banner */}
+        <div className="result-card text-center">
+          <div className="text-5xl mb-3">{resultEmoji}</div>
+          <div className="font-display font-bold text-2xl text-white mb-1">
+            {resultText}
+          </div>
+          <p className="text-white/70 text-sm">Full Match Result</p>
+        </div>
+
+        {/* Scorecard summary */}
+        <div className="cricket-card rounded-2xl p-4 flex flex-col gap-4">
+          {/* 1st innings */}
+          <div>
+            <p
+              className="text-xs font-semibold uppercase tracking-wider mb-2"
+              style={{ color: "#f59e0b" }}
+            >
+              1st Innings
+            </p>
+            <div className="flex items-center justify-between">
+              <span
+                className="font-display font-semibold"
+                style={{ color: "rgba(255,255,255,0.9)" }}
+              >
+                {teamA}
+              </span>
+              <span
+                className="font-display font-bold text-xl"
+                style={{ color: "#22c55e" }}
+              >
+                {innings1.runs}/{innings1.wickets}
+              </span>
+            </div>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+              {formatOvers(innings1.legalBalls)} ov · RR{" "}
+              {getRunRate(innings1.runs, innings1.legalBalls)}
+            </p>
+          </div>
+
+          <div style={{ height: "1px", background: "rgba(255,255,255,0.1)" }} />
+
+          {/* 2nd innings */}
+          <div>
+            <p
+              className="text-xs font-semibold uppercase tracking-wider mb-2"
+              style={{ color: "#f59e0b" }}
+            >
+              2nd Innings
+            </p>
+            <div className="flex items-center justify-between">
+              <span
+                className="font-display font-semibold"
+                style={{ color: "rgba(255,255,255,0.9)" }}
+              >
+                {teamB}
+              </span>
+              <span
+                className="font-display font-bold text-xl"
+                style={{ color: "#22c55e" }}
+              >
+                {innings2Runs}/{innings2Wickets}
+              </span>
+            </div>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+              {formatOvers(innings2Balls)} ov · Target was {target} · RR{" "}
+              {getRunRate(innings2Runs, innings2Balls)}
+            </p>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <button
+          type="button"
+          data-ocid="result.save.primary_button"
+          onClick={onSave}
+          className="btn-tap w-full py-4 rounded-2xl font-display font-bold text-xl text-white"
+          style={{
+            background: "linear-gradient(135deg, #0f5132 0%, #22c55e 100%)",
+            boxShadow: "0 6px 24px rgba(34,197,94,0.45)",
+          }}
+        >
+          💾 Save Match
+        </button>
+
+        <button
+          type="button"
+          data-ocid="result.newmatch.secondary_button"
+          onClick={onNewMatch}
+          className="btn-tap w-full py-3 rounded-2xl font-semibold text-base"
+          style={{
+            background: "rgba(255,255,255,0.07)",
+            border: "1px solid rgba(255,255,255,0.18)",
+            color: "rgba(255,255,255,0.7)",
+          }}
+        >
+          🏏 New Match
+        </button>
+      </div>
     </div>
   );
 }
@@ -880,19 +1390,20 @@ function HistoryScreen({
   return (
     <div
       data-ocid="history.panel"
-      className="flex flex-col min-h-screen bg-background"
+      className="panel-bg flex flex-col min-h-screen"
     >
-      <header className="cricket-scoreboard px-4 py-4 shadow-scoreboard">
+      <header className="cricket-scoreboard px-4 py-4">
         <div className="flex items-center gap-3 max-w-[480px] mx-auto">
           <button
             type="button"
             onClick={onBack}
+            data-ocid="history.back.button"
             className="btn-tap text-white/70 hover:text-white p-1.5"
             aria-label="Back"
           >
             <ArrowLeft size={22} />
           </button>
-          <h1 className="font-display text-xl font-bold text-white tracking-wide">
+          <h1 className="scoreboard-title font-display text-xl font-bold text-white tracking-wide">
             Match History
           </h1>
         </div>
@@ -906,10 +1417,16 @@ function HistoryScreen({
               className="text-center py-16 flex flex-col items-center gap-3"
             >
               <span className="text-5xl">🏏</span>
-              <p className="text-muted-foreground font-medium">
+              <p
+                className="font-medium"
+                style={{ color: "rgba(255,255,255,0.6)" }}
+              >
                 No matches saved yet
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p
+                className="text-sm"
+                style={{ color: "rgba(255,255,255,0.35)" }}
+              >
                 Complete a match to see it here
               </p>
             </div>
@@ -920,28 +1437,55 @@ function HistoryScreen({
                 data-ocid={
                   `history.item.${i + 1}` as `history.item.${1 | 2 | 3}`
                 }
-                className="bg-card rounded-2xl shadow-card p-4 border border-border"
+                className="cricket-card rounded-2xl p-4"
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="font-display font-semibold text-foreground">
+                    <p
+                      className="font-display font-semibold"
+                      style={{ color: "rgba(255,255,255,0.9)" }}
+                    >
                       {m.teamA}
                     </p>
-                    <p className="text-muted-foreground text-sm">{m.teamB}</p>
+                    <p
+                      className="text-sm"
+                      style={{ color: "rgba(255,255,255,0.5)" }}
+                    >
+                      vs {m.teamB}
+                    </p>
+                    {m.result && (
+                      <p
+                        className="text-xs font-semibold mt-1"
+                        style={{ color: "#22c55e" }}
+                      >
+                        {m.result}
+                      </p>
+                    )}
                   </div>
                   <div className="text-right">
                     <p
                       className="font-display font-bold text-xl"
-                      style={{ color: "#16A34A" }}
+                      style={{ color: "#22c55e" }}
                     >
                       {m.runs}/{m.wickets}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    {m.team2Runs !== undefined && (
+                      <p className="text-sm" style={{ color: "#3b82f6" }}>
+                        {m.team2Runs}/{m.team2Wickets ?? 0}
+                      </p>
+                    )}
+                    <p
+                      className="text-sm"
+                      style={{ color: "rgba(255,255,255,0.5)" }}
+                    >
                       {formatOvers(m.overs * 6 + m.balls)} ov
                     </p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2">
+                <p
+                  className="text-xs mt-2"
+                  style={{ color: "rgba(255,255,255,0.3)" }}
+                >
                   {formatDate(m.date)}
                 </p>
               </div>
@@ -950,13 +1494,17 @@ function HistoryScreen({
         </div>
       </main>
 
-      <footer className="text-center py-4 text-xs text-muted-foreground">
+      <footer
+        className="text-center py-4 text-xs"
+        style={{ color: "rgba(255,255,255,0.3)" }}
+      >
         © {new Date().getFullYear()}. Built with love using{" "}
         <a
           href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
+          style={{ color: "#22c55e" }}
         >
           caffeine.ai
         </a>
@@ -983,10 +1531,14 @@ const defaultMatch = (
   bowler: defaultBowler(),
 });
 
-function loadActiveMatch(): {
+interface ActiveMatchStorage {
   match: MatchState;
   history: HistoryEntry[];
-} | null {
+  phase: 1 | 2;
+  innings1Result: Innings1Result | null;
+}
+
+function loadActiveMatch(): ActiveMatchStorage | null {
   try {
     const data = localStorage.getItem(ACTIVE_MATCH_KEY);
     if (!data) return null;
@@ -996,14 +1548,18 @@ function loadActiveMatch(): {
   }
 }
 
-function saveActiveMatch(match: MatchState, history: HistoryEntry[]) {
-  localStorage.setItem(ACTIVE_MATCH_KEY, JSON.stringify({ match, history }));
+function saveActiveMatch(storage: ActiveMatchStorage) {
+  localStorage.setItem(ACTIVE_MATCH_KEY, JSON.stringify(storage));
 }
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("setup");
   const [match, setMatch] = useState<MatchState | null>(null);
   const [actionHistory, setActionHistory] = useState<HistoryEntry[]>([]);
+  const [phase, setPhase] = useState<1 | 2>(1);
+  const [innings1Result, setInnings1Result] = useState<Innings1Result | null>(
+    null,
+  );
   const [localMatches, setLocalMatches] = useState<LocalMatch[]>(
     getLocalHistory(),
   );
@@ -1011,25 +1567,36 @@ export default function App() {
   const { data: backendMatches = [] } = useGetAllMatches();
   const saveMatch = useSaveMatch();
 
+  // Restore active match on mount
   useEffect(() => {
     const saved = loadActiveMatch();
     if (saved) {
       setMatch(saved.match);
       setActionHistory(saved.history);
+      setPhase(saved.phase ?? 1);
+      setInnings1Result(saved.innings1Result ?? null);
       setScreen("scoring");
     }
   }, []);
 
+  // Persist active match
   useEffect(() => {
     if (match) {
-      saveActiveMatch(match, actionHistory);
+      saveActiveMatch({
+        match,
+        history: actionHistory,
+        phase,
+        innings1Result,
+      });
     }
-  }, [match, actionHistory]);
+  }, [match, actionHistory, phase, innings1Result]);
 
   const handleStart = (teamA: string, teamB: string, totalOvers: number) => {
     const m = defaultMatch(teamA, teamB, totalOvers);
     setMatch(m);
     setActionHistory([]);
+    setPhase(1);
+    setInnings1Result(null);
     setScreen("scoring");
   };
 
@@ -1065,14 +1632,138 @@ export default function App() {
 
   const handleReset = () => {
     if (!match) return;
+    if (phase === 2 && innings1Result) {
+      const fresh = defaultMatch(match.teamA, match.teamB, match.totalOvers);
+      setMatch(fresh);
+      setActionHistory([]);
+      toast.success("2nd innings reset");
+    } else {
+      const fresh = defaultMatch(match.teamA, match.teamB, match.totalOvers);
+      setMatch(fresh);
+      setActionHistory([]);
+      setPhase(1);
+      setInnings1Result(null);
+      localStorage.removeItem(ACTIVE_MATCH_KEY);
+      toast.success("Match reset");
+    }
+  };
+
+  const handleInnings1End = () => {
+    if (!match) return;
+    setInnings1Result({
+      runs: match.runs,
+      wickets: match.wickets,
+      legalBalls: match.legalBalls,
+      totalOvers: match.totalOvers,
+    });
+    setScreen("innings-break");
+  };
+
+  const handleStart2ndInnings = () => {
+    if (!match) return;
     const fresh = defaultMatch(match.teamA, match.teamB, match.totalOvers);
     setMatch(fresh);
     setActionHistory([]);
-    localStorage.removeItem(ACTIVE_MATCH_KEY);
-    toast.success("Match reset");
+    setPhase(2);
+    setScreen("scoring");
+    toast.success(
+      `${match.teamB} needs ${(innings1Result?.runs ?? 0) + 1} to win!`,
+    );
   };
 
-  const handleSave = () => {
+  const handleInnings2End = () => {
+    setScreen("result");
+  };
+
+  const handleSaveInnings1Only = () => {
+    if (!match && !innings1Result) return;
+    const i1 = innings1Result;
+    if (!i1 || !match) return;
+    const overs = Math.floor(i1.legalBalls / 6);
+    const balls = i1.legalBalls % 6;
+    const entry: LocalMatch = {
+      teamA: match.teamA,
+      teamB: match.teamB,
+      runs: i1.runs,
+      wickets: i1.wickets,
+      overs,
+      balls,
+      date: new Date().toISOString(),
+    };
+    const updated = [entry, ...localMatches];
+    setLocalMatches(updated);
+    saveLocalHistory(updated);
+    saveMatch.mutate({
+      team1Name: match.teamA,
+      team1Score: i1.runs,
+      team2Name: match.teamB,
+      team2Score: 0,
+      overs,
+      balls,
+    });
+    localStorage.removeItem(ACTIVE_MATCH_KEY);
+    toast.success("Match saved!");
+    setScreen("setup");
+    setMatch(null);
+    setActionHistory([]);
+    setPhase(1);
+    setInnings1Result(null);
+  };
+
+  const handleSaveFullMatch = () => {
+    if (!match || !innings1Result) return;
+    const i1 = innings1Result;
+    const i2runs = match.runs;
+    const i2wickets = match.wickets;
+    const overs1 = Math.floor(i1.legalBalls / 6);
+    const balls1 = i1.legalBalls % 6;
+
+    const target = i1.runs + 1;
+    const won2nd = i2runs >= target;
+    const runsMargin = i1.runs - i2runs;
+    const wicketsLeft = 10 - i2wickets;
+    let resultText = "";
+    if (i2runs === i1.runs && i2wickets >= 10) {
+      resultText = "Match Tied";
+    } else if (won2nd) {
+      resultText = `${match.teamB} won by ${wicketsLeft}W`;
+    } else {
+      resultText = `${match.teamA} won by ${runsMargin}R`;
+    }
+
+    const entry: LocalMatch = {
+      teamA: match.teamA,
+      teamB: match.teamB,
+      runs: i1.runs,
+      wickets: i1.wickets,
+      overs: overs1,
+      balls: balls1,
+      team2Runs: i2runs,
+      team2Wickets: i2wickets,
+      result: resultText,
+      date: new Date().toISOString(),
+    };
+    const updated = [entry, ...localMatches];
+    setLocalMatches(updated);
+    saveLocalHistory(updated);
+    saveMatch.mutate({
+      team1Name: match.teamA,
+      team1Score: i1.runs,
+      team2Name: match.teamB,
+      team2Score: i2runs,
+      overs: overs1,
+      balls: balls1,
+    });
+    localStorage.removeItem(ACTIVE_MATCH_KEY);
+    toast.success("Match saved!");
+    setScreen("setup");
+    setMatch(null);
+    setActionHistory([]);
+    setPhase(1);
+    setInnings1Result(null);
+  };
+
+  const handleSaveSingleInnings = () => {
     if (!match) return;
     const overs = Math.floor(match.legalBalls / 6);
     const balls = match.legalBalls % 6;
@@ -1088,7 +1779,6 @@ export default function App() {
     const updated = [entry, ...localMatches];
     setLocalMatches(updated);
     saveLocalHistory(updated);
-
     saveMatch.mutate({
       team1Name: match.teamA,
       team1Score: match.runs,
@@ -1097,38 +1787,98 @@ export default function App() {
       overs,
       balls,
     });
-
     localStorage.removeItem(ACTIVE_MATCH_KEY);
     toast.success("Match saved!");
     setScreen("setup");
     setMatch(null);
     setActionHistory([]);
+    setPhase(1);
+    setInnings1Result(null);
   };
+
+  const chasingTarget =
+    phase === 2 && innings1Result ? innings1Result.runs + 1 : undefined;
 
   return (
     <>
       <Toaster position="top-center" />
+
       {screen === "setup" && (
         <SetupScreen
           onStart={handleStart}
           onHistory={() => setScreen("history")}
         />
       )}
-      {screen === "scoring" && match && (
+
+      {screen === "scoring" && match && phase === 1 && (
         <ScoringScreen
           match={match}
           onUpdateMatch={handleUpdateMatch}
           onReset={handleReset}
-          onSave={handleSave}
+          onSave={handleSaveSingleInnings}
           onHistory={() => setScreen("history")}
           actionHistory={actionHistory}
           onUndo={handleUndo}
           onPushHistory={(e) => setActionHistory((h) => [...h, e])}
+          onInningsEnd={handleInnings1End}
         />
       )}
+
+      {screen === "scoring" && match && phase === 2 && (
+        <ScoringScreen
+          match={match}
+          onUpdateMatch={handleUpdateMatch}
+          onReset={handleReset}
+          onSave={handleSaveSingleInnings}
+          onHistory={() => setScreen("history")}
+          actionHistory={actionHistory}
+          onUndo={handleUndo}
+          onPushHistory={(e) => setActionHistory((h) => [...h, e])}
+          chasingTarget={chasingTarget}
+          onInningsEnd={handleInnings2End}
+        />
+      )}
+
+      {screen === "innings-break" && match && (
+        <InningsBreakScreen
+          teamA={match.teamA}
+          teamB={match.teamB}
+          innings1Runs={innings1Result?.runs ?? 0}
+          innings1Wickets={innings1Result?.wickets ?? 0}
+          innings1Overs={formatOvers(innings1Result?.legalBalls ?? 0)}
+          totalOvers={match.totalOvers}
+          onStart2ndInnings={handleStart2ndInnings}
+          onSaveAndExit={handleSaveInnings1Only}
+        />
+      )}
+
+      {screen === "result" && match && innings1Result && (
+        <MatchResultScreen
+          teamA={match.teamA}
+          teamB={match.teamB}
+          innings1={innings1Result}
+          innings2Runs={match.runs}
+          innings2Wickets={match.wickets}
+          innings2Balls={match.legalBalls}
+          onSave={handleSaveFullMatch}
+          onNewMatch={() => {
+            localStorage.removeItem(ACTIVE_MATCH_KEY);
+            setMatch(null);
+            setActionHistory([]);
+            setPhase(1);
+            setInnings1Result(null);
+            setScreen("setup");
+          }}
+        />
+      )}
+
       {screen === "history" && (
         <HistoryScreen
-          onBack={() => setScreen(match ? "scoring" : "setup")}
+          onBack={() =>
+            setScreen(
+              match ? (screen === "history" ? "scoring" : "scoring") : "setup",
+            )
+          }
           backendMatches={backendMatches}
           localMatches={localMatches}
         />
