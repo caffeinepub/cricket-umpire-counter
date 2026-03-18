@@ -153,7 +153,8 @@ function BallDots({ legalBalls }: { legalBalls: number }) {
           key={bk}
           className="text-xl leading-none transition-all duration-200"
           style={{
-            color: i < ballsInCurrentOver ? "#F59E0B" : "rgba(255,255,255,0.4)",
+            color:
+              i < ballsInCurrentOver ? "#F59E0B" : "rgba(255,255,255,0.28)",
           }}
         >
           {i < ballsInCurrentOver ? "●" : "○"}
@@ -237,7 +238,7 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
         <div className="cricket-card rounded-2xl p-5 flex flex-col gap-4">
           <h2
             className="font-display text-lg font-semibold"
-            style={{ color: "#374151" }}
+            style={{ color: "#f59e0b" }}
           >
             ✦ New Match
           </h2>
@@ -246,7 +247,7 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
             <label
               htmlFor="teamA"
               className="text-sm font-medium"
-              style={{ color: "#374151" }}
+              style={{ color: "rgba(255,255,255,0.75)" }}
             >
               Team A
             </label>
@@ -265,7 +266,7 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
             <label
               htmlFor="teamB"
               className="text-sm font-medium"
-              style={{ color: "#374151" }}
+              style={{ color: "rgba(255,255,255,0.75)" }}
             >
               Team B
             </label>
@@ -282,7 +283,10 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
 
           {/* Total Overs */}
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium" style={{ color: "#374151" }}>
+            <span
+              className="text-sm font-medium"
+              style={{ color: "rgba(255,255,255,0.75)" }}
+            >
               Total Overs
             </span>
 
@@ -298,13 +302,15 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
                     onClick={() => handlePresetClick(preset)}
                     className="btn-tap px-4 py-2 rounded-full text-sm font-semibold transition-all"
                     style={{
-                      background: isActive ? "#1B5E20" : "#f3f4f6",
-                      color: isActive ? "#ffffff" : "#4b5563",
+                      background: isActive
+                        ? "#22c55e"
+                        : "rgba(255,255,255,0.08)",
+                      color: isActive ? "#ffffff" : "rgba(255,255,255,0.65)",
                       border: isActive
-                        ? "1.5px solid #1B5E20"
-                        : "1.5px solid #d1d5db",
+                        ? "1.5px solid #22c55e"
+                        : "1.5px solid rgba(255,255,255,0.18)",
                       boxShadow: isActive
-                        ? "0 2px 8px rgba(27,94,32,0.3)"
+                        ? "0 3px 12px rgba(34,197,94,0.5)"
                         : "none",
                     }}
                     aria-pressed={isActive}
@@ -320,7 +326,7 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
               <label
                 htmlFor="customOvers"
                 className="text-xs"
-                style={{ color: "#9ca3af" }}
+                style={{ color: "rgba(255,255,255,0.45)" }}
               >
                 Or enter custom overs:
               </label>
@@ -336,9 +342,9 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
               />
             </div>
 
-            <p className="text-xs" style={{ color: "#9ca3af" }}>
+            <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>
               Selected:{" "}
-              <span className="font-semibold" style={{ color: "#374151" }}>
+              <span className="font-semibold" style={{ color: "#f59e0b" }}>
                 {finalOvers && !Number.isNaN(finalOvers) && finalOvers > 0
                   ? `${finalOvers} overs`
                   : "—"}
@@ -351,11 +357,11 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
         <div className="cricket-card rounded-2xl p-5 flex flex-col gap-2">
           <h2
             className="font-display text-lg font-semibold"
-            style={{ color: "#374151" }}
+            style={{ color: "#f59e0b" }}
           >
             ✦ Players (Optional)
           </h2>
-          <p className="text-sm" style={{ color: "#6b7280" }}>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
             You can set player names from the scoring screen.
           </p>
         </div>
@@ -366,21 +372,25 @@ function SetupScreen({ onStart, onHistory }: SetupScreenProps) {
           onClick={handleStart}
           className="btn-tap w-full py-4 rounded-2xl text-white font-display font-bold text-lg"
           style={{
-            background: "#1B5E20",
+            background: "linear-gradient(135deg, #0f5132 0%, #22c55e 100%)",
+            boxShadow: "0 6px 24px rgba(34,197,94,0.45)",
           }}
         >
           🏏 Start Match
         </button>
       </main>
 
-      <footer className="text-center py-4 text-xs" style={{ color: "#9ca3af" }}>
+      <footer
+        className="text-center py-4 text-xs"
+        style={{ color: "rgba(255,255,255,0.35)" }}
+      >
         © {new Date().getFullYear()}. Built with love using{" "}
         <a
           href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
-          style={{ color: "#1B5E20" }}
+          style={{ color: "#22c55e" }}
         >
           caffeine.ai
         </a>
@@ -576,7 +586,7 @@ function ScoringScreen({
           <div className="flex items-center gap-3">
             <span
               className="font-display text-2xl font-bold"
-              style={{ color: "#374151" }}
+              style={{ color: "#F59E0B" }}
             >
               {match.runs}
             </span>
@@ -604,7 +614,7 @@ function ScoringScreen({
                 </p>
                 <p
                   className="font-display font-bold text-xl"
-                  style={{ color: "#374151" }}
+                  style={{ color: "#F59E0B" }}
                 >
                   {chasingTarget}
                 </p>
@@ -623,7 +633,7 @@ function ScoringScreen({
                 </p>
                 <p
                   className="font-display font-bold text-xl"
-                  style={{ color: "#374151" }}
+                  style={{ color: "#F59E0B" }}
                 >
                   {rrr}
                 </p>
@@ -686,7 +696,7 @@ function ScoringScreen({
           {/* Section label: RUNS */}
           <p
             className="text-xs font-bold tracking-widest uppercase px-1"
-            style={{ color: "#374151" }}
+            style={{ color: "#f59e0b" }}
           >
             RUNS
           </p>
@@ -737,10 +747,7 @@ function ScoringScreen({
                 type="button"
                 key={label}
                 data-ocid={ocid}
-                onClick={(e) => {
-                  handleRun(run);
-                  (e.currentTarget as HTMLButtonElement).blur();
-                }}
+                onClick={() => handleRun(run)}
                 disabled={matchOver}
                 className={`btn-tap ${cls} rounded-xl font-display font-bold text-2xl disabled:opacity-40`}
                 style={{ minHeight: "64px" }}
@@ -754,10 +761,7 @@ function ScoringScreen({
           <button
             type="button"
             data-ocid="scoring.wicket.button"
-            onClick={(e) => {
-              handleWicket();
-              (e.currentTarget as HTMLButtonElement).blur();
-            }}
+            onClick={handleWicket}
             disabled={matchOver || match.wickets >= 10}
             className="btn-tap btn-wicket w-full rounded-xl font-display font-bold text-xl disabled:opacity-40"
             style={{ minHeight: "60px" }}
@@ -768,7 +772,7 @@ function ScoringScreen({
           {/* Section label: EXTRAS */}
           <p
             className="text-xs font-bold tracking-widest uppercase px-1"
-            style={{ color: "#374151" }}
+            style={{ color: "#f59e0b" }}
           >
             EXTRAS (+1 RUN)
           </p>
@@ -778,10 +782,7 @@ function ScoringScreen({
             <button
               type="button"
               data-ocid="scoring.wide.button"
-              onClick={(e) => {
-                handleExtra("wide", false);
-                (e.currentTarget as HTMLButtonElement).blur();
-              }}
+              onClick={() => handleExtra("wide", false)}
               disabled={matchOver}
               className="btn-tap btn-wide rounded-xl font-display font-semibold text-lg disabled:opacity-40"
               style={{ minHeight: "58px" }}
@@ -791,10 +792,7 @@ function ScoringScreen({
             <button
               type="button"
               data-ocid="scoring.noball.button"
-              onClick={(e) => {
-                handleExtra("noball", false);
-                (e.currentTarget as HTMLButtonElement).blur();
-              }}
+              onClick={() => handleExtra("noball", false)}
               disabled={matchOver}
               className="btn-tap btn-noball rounded-xl font-display font-semibold text-lg disabled:opacity-40"
               style={{ minHeight: "58px" }}
@@ -804,10 +802,7 @@ function ScoringScreen({
             <button
               type="button"
               data-ocid="scoring.bye.button"
-              onClick={(e) => {
-                handleExtra("bye", true);
-                (e.currentTarget as HTMLButtonElement).blur();
-              }}
+              onClick={() => handleExtra("bye", true)}
               disabled={matchOver}
               className="btn-tap btn-bye rounded-xl font-display font-semibold text-lg disabled:opacity-40"
               style={{ minHeight: "58px" }}
@@ -817,10 +812,7 @@ function ScoringScreen({
             <button
               type="button"
               data-ocid="scoring.legbye.button"
-              onClick={(e) => {
-                handleExtra("legbye", true);
-                (e.currentTarget as HTMLButtonElement).blur();
-              }}
+              onClick={() => handleExtra("legbye", true)}
               disabled={matchOver}
               className="btn-tap btn-legbye rounded-xl font-display font-semibold text-lg disabled:opacity-40"
               style={{ minHeight: "58px" }}
@@ -836,13 +828,13 @@ function ScoringScreen({
             onClick={() => setShowStats((v) => !v)}
             className="btn-tap btn-stats-toggle w-full flex items-center justify-between cricket-card rounded-xl px-4 py-3"
           >
-            <span style={{ color: "#1B5E20", fontWeight: 600 }}>
+            <span style={{ color: "#22c55e", fontWeight: 600 }}>
               Player Stats
             </span>
             {showStats ? (
-              <ChevronUp size={18} style={{ color: "#1B5E20" }} />
+              <ChevronUp size={18} style={{ color: "#22c55e" }} />
             ) : (
-              <ChevronDown size={18} style={{ color: "#1B5E20" }} />
+              <ChevronDown size={18} style={{ color: "#22c55e" }} />
             )}
           </button>
 
@@ -853,7 +845,7 @@ function ScoringScreen({
               <div>
                 <p
                   className="text-xs font-semibold uppercase tracking-wider mb-2"
-                  style={{ color: "#374151" }}
+                  style={{ color: "#f59e0b" }}
                 >
                   Batsmen
                 </p>
@@ -865,7 +857,10 @@ function ScoringScreen({
                       key={key}
                       className="flex items-center justify-between py-2"
                       style={{
-                        borderBottom: idx === 0 ? "1px solid #e5e7eb" : "none",
+                        borderBottom:
+                          idx === 0
+                            ? "1px solid rgba(255,255,255,0.1)"
+                            : "none",
                       }}
                     >
                       <div className="flex-1">
@@ -887,7 +882,7 @@ function ScoringScreen({
                               startEdit(field, b.name || `Batsman ${idx + 1}`)
                             }
                             className="text-left text-sm font-medium"
-                            style={{ color: "#111827" }}
+                            style={{ color: "rgba(255,255,255,0.85)" }}
                           >
                             {b.name || `Batsman ${idx + 1}`}{" "}
                             <span
@@ -903,24 +898,33 @@ function ScoringScreen({
                       </div>
                       <div className="flex gap-4 text-right">
                         <div>
-                          <p className="text-xs" style={{ color: "#6b7280" }}>
+                          <p
+                            className="text-xs"
+                            style={{ color: "rgba(255,255,255,0.5)" }}
+                          >
                             Runs
                           </p>
-                          <p className="font-bold" style={{ color: "#1B5E20" }}>
+                          <p className="font-bold" style={{ color: "#22c55e" }}>
                             {b.runs}
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs" style={{ color: "#6b7280" }}>
+                          <p
+                            className="text-xs"
+                            style={{ color: "rgba(255,255,255,0.5)" }}
+                          >
                             Balls
                           </p>
                           <p className="font-bold text-white">{b.balls}</p>
                         </div>
                         <div>
-                          <p className="text-xs" style={{ color: "#6b7280" }}>
+                          <p
+                            className="text-xs"
+                            style={{ color: "rgba(255,255,255,0.5)" }}
+                          >
                             SR
                           </p>
-                          <p className="font-bold" style={{ color: "#374151" }}>
+                          <p className="font-bold" style={{ color: "#f59e0b" }}>
                             {strikeRate(b.runs, b.balls)}
                           </p>
                         </div>
@@ -934,7 +938,7 @@ function ScoringScreen({
               <div>
                 <p
                   className="text-xs font-semibold uppercase tracking-wider mb-2"
-                  style={{ color: "#374151" }}
+                  style={{ color: "#f59e0b" }}
                 >
                   Bowler
                 </p>
@@ -958,7 +962,7 @@ function ScoringScreen({
                           startEdit("bowlername", match.bowler.name || "Bowler")
                         }
                         className="text-left text-sm font-medium"
-                        style={{ color: "#111827" }}
+                        style={{ color: "rgba(255,255,255,0.85)" }}
                       >
                         {match.bowler.name || "Bowler"}{" "}
                         <span
@@ -974,7 +978,10 @@ function ScoringScreen({
                   </div>
                   <div className="flex gap-4 text-right">
                     <div>
-                      <p className="text-xs" style={{ color: "#6b7280" }}>
+                      <p
+                        className="text-xs"
+                        style={{ color: "rgba(255,255,255,0.5)" }}
+                      >
                         Ov
                       </p>
                       <p className="font-bold text-white">
@@ -982,18 +989,24 @@ function ScoringScreen({
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs" style={{ color: "#6b7280" }}>
+                      <p
+                        className="text-xs"
+                        style={{ color: "rgba(255,255,255,0.5)" }}
+                      >
                         Runs
                       </p>
-                      <p className="font-bold" style={{ color: "#1B5E20" }}>
+                      <p className="font-bold" style={{ color: "#22c55e" }}>
                         {match.bowler.runs}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs" style={{ color: "#6b7280" }}>
+                      <p
+                        className="text-xs"
+                        style={{ color: "rgba(255,255,255,0.5)" }}
+                      >
                         Wkts
                       </p>
-                      <p className="font-bold" style={{ color: "#B71C1C" }}>
+                      <p className="font-bold" style={{ color: "#dc2626" }}>
                         {match.bowler.wickets}
                       </p>
                     </div>
@@ -1043,9 +1056,9 @@ function ScoringScreen({
               }}
               className="btn-tap w-full rounded-xl font-display font-semibold text-base"
               style={{
-                background: "#f3f4f6",
-                border: "1px solid #e5e7eb",
-                color: "#374151",
+                background: "rgba(255,255,255,0.07)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                color: "rgba(255,255,255,0.7)",
                 minHeight: "48px",
               }}
             >
@@ -1064,7 +1077,8 @@ function ScoringScreen({
               }}
               className="btn-tap w-full py-4 rounded-2xl font-display font-bold text-xl text-white"
               style={{
-                background: "#1B5E20",
+                background: "linear-gradient(135deg, #0f5132 0%, #22c55e 100%)",
+                boxShadow: "0 6px 24px rgba(34,197,94,0.45)",
               }}
             >
               🏆 See Match Result
@@ -1082,9 +1096,9 @@ function ScoringScreen({
               }}
               className="btn-tap w-full rounded-xl font-display font-semibold text-base"
               style={{
-                background: "#f3f4f6",
-                border: "1px solid #e5e7eb",
-                color: "#374151",
+                background: "rgba(255,255,255,0.07)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                color: "rgba(255,255,255,0.7)",
                 minHeight: "48px",
               }}
             >
@@ -1148,7 +1162,7 @@ function InningsBreakScreen({
 
           <div
             className="mt-5 pt-4 border-t"
-            style={{ borderColor: "rgba(255,255,255,0.3)" }}
+            style={{ borderColor: "rgba(255,255,255,0.2)" }}
           >
             <p className="text-white/80 text-base">
               <span className="font-bold text-white">{teamB}</span> needs{" "}
@@ -1172,7 +1186,8 @@ function InningsBreakScreen({
           onClick={onStart2ndInnings}
           className="btn-tap w-full py-4 rounded-2xl font-display font-bold text-xl text-white"
           style={{
-            background: "#1B5E20",
+            background: "linear-gradient(135deg, #0f5132 0%, #22c55e 100%)",
+            boxShadow: "0 6px 24px rgba(34,197,94,0.45)",
           }}
         >
           🏏 Start 2nd Innings
@@ -1184,9 +1199,9 @@ function InningsBreakScreen({
           onClick={onSaveAndExit}
           className="btn-tap w-full py-3 rounded-2xl font-semibold text-base"
           style={{
-            background: "rgba(255,255,255,0.2)",
-            border: "1px solid rgba(255,255,255,0.3)",
-            color: "#ffffff",
+            background: "rgba(255,255,255,0.07)",
+            border: "1px solid rgba(255,255,255,0.18)",
+            color: "rgba(255,255,255,0.7)",
           }}
         >
           💾 Save 1st Innings & Exit
@@ -1259,55 +1274,55 @@ function MatchResultScreen({
           <div>
             <p
               className="text-xs font-semibold uppercase tracking-wider mb-2"
-              style={{ color: "#374151" }}
+              style={{ color: "#f59e0b" }}
             >
               1st Innings
             </p>
             <div className="flex items-center justify-between">
               <span
                 className="font-display font-semibold"
-                style={{ color: "#111827" }}
+                style={{ color: "rgba(255,255,255,0.9)" }}
               >
                 {teamA}
               </span>
               <span
                 className="font-display font-bold text-xl"
-                style={{ color: "#1B5E20" }}
+                style={{ color: "#22c55e" }}
               >
                 {innings1.runs}/{innings1.wickets}
               </span>
             </div>
-            <p className="text-sm" style={{ color: "#6b7280" }}>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
               {formatOvers(innings1.legalBalls)} ov · RR{" "}
               {getRunRate(innings1.runs, innings1.legalBalls)}
             </p>
           </div>
 
-          <div style={{ height: "1px", background: "#e5e7eb" }} />
+          <div style={{ height: "1px", background: "rgba(255,255,255,0.1)" }} />
 
           {/* 2nd innings */}
           <div>
             <p
               className="text-xs font-semibold uppercase tracking-wider mb-2"
-              style={{ color: "#374151" }}
+              style={{ color: "#f59e0b" }}
             >
               2nd Innings
             </p>
             <div className="flex items-center justify-between">
               <span
                 className="font-display font-semibold"
-                style={{ color: "#111827" }}
+                style={{ color: "rgba(255,255,255,0.9)" }}
               >
                 {teamB}
               </span>
               <span
                 className="font-display font-bold text-xl"
-                style={{ color: "#1B5E20" }}
+                style={{ color: "#22c55e" }}
               >
                 {innings2Runs}/{innings2Wickets}
               </span>
             </div>
-            <p className="text-sm" style={{ color: "#6b7280" }}>
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
               {formatOvers(innings2Balls)} ov · Target was {target} · RR{" "}
               {getRunRate(innings2Runs, innings2Balls)}
             </p>
@@ -1321,7 +1336,8 @@ function MatchResultScreen({
           onClick={onSave}
           className="btn-tap w-full py-4 rounded-2xl font-display font-bold text-xl text-white"
           style={{
-            background: "#1B5E20",
+            background: "linear-gradient(135deg, #0f5132 0%, #22c55e 100%)",
+            boxShadow: "0 6px 24px rgba(34,197,94,0.45)",
           }}
         >
           💾 Save Match
@@ -1333,9 +1349,9 @@ function MatchResultScreen({
           onClick={onNewMatch}
           className="btn-tap w-full py-3 rounded-2xl font-semibold text-base"
           style={{
-            background: "rgba(255,255,255,0.2)",
-            border: "1px solid rgba(255,255,255,0.3)",
-            color: "#ffffff",
+            background: "rgba(255,255,255,0.07)",
+            border: "1px solid rgba(255,255,255,0.18)",
+            color: "rgba(255,255,255,0.7)",
           }}
         >
           🏏 New Match
@@ -1401,10 +1417,16 @@ function HistoryScreen({
               className="text-center py-16 flex flex-col items-center gap-3"
             >
               <span className="text-5xl">🏏</span>
-              <p className="font-medium" style={{ color: "#6b7280" }}>
+              <p
+                className="font-medium"
+                style={{ color: "rgba(255,255,255,0.6)" }}
+              >
                 No matches saved yet
               </p>
-              <p className="text-sm" style={{ color: "#9ca3af" }}>
+              <p
+                className="text-sm"
+                style={{ color: "rgba(255,255,255,0.35)" }}
+              >
                 Complete a match to see it here
               </p>
             </div>
@@ -1421,17 +1443,20 @@ function HistoryScreen({
                   <div>
                     <p
                       className="font-display font-semibold"
-                      style={{ color: "#111827" }}
+                      style={{ color: "rgba(255,255,255,0.9)" }}
                     >
                       {m.teamA}
                     </p>
-                    <p className="text-sm" style={{ color: "#6b7280" }}>
+                    <p
+                      className="text-sm"
+                      style={{ color: "rgba(255,255,255,0.5)" }}
+                    >
                       vs {m.teamB}
                     </p>
                     {m.result && (
                       <p
                         className="text-xs font-semibold mt-1"
-                        style={{ color: "#1B5E20" }}
+                        style={{ color: "#22c55e" }}
                       >
                         {m.result}
                       </p>
@@ -1440,21 +1465,27 @@ function HistoryScreen({
                   <div className="text-right">
                     <p
                       className="font-display font-bold text-xl"
-                      style={{ color: "#1B5E20" }}
+                      style={{ color: "#22c55e" }}
                     >
                       {m.runs}/{m.wickets}
                     </p>
                     {m.team2Runs !== undefined && (
-                      <p className="text-sm" style={{ color: "#1565C0" }}>
+                      <p className="text-sm" style={{ color: "#3b82f6" }}>
                         {m.team2Runs}/{m.team2Wickets ?? 0}
                       </p>
                     )}
-                    <p className="text-sm" style={{ color: "#6b7280" }}>
+                    <p
+                      className="text-sm"
+                      style={{ color: "rgba(255,255,255,0.5)" }}
+                    >
                       {formatOvers(m.overs * 6 + m.balls)} ov
                     </p>
                   </div>
                 </div>
-                <p className="text-xs mt-2" style={{ color: "#9ca3af" }}>
+                <p
+                  className="text-xs mt-2"
+                  style={{ color: "rgba(255,255,255,0.3)" }}
+                >
                   {formatDate(m.date)}
                 </p>
               </div>
@@ -1463,14 +1494,17 @@ function HistoryScreen({
         </div>
       </main>
 
-      <footer className="text-center py-4 text-xs" style={{ color: "#9ca3af" }}>
+      <footer
+        className="text-center py-4 text-xs"
+        style={{ color: "rgba(255,255,255,0.3)" }}
+      >
         © {new Date().getFullYear()}. Built with love using{" "}
         <a
           href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
-          style={{ color: "#1B5E20" }}
+          style={{ color: "#22c55e" }}
         >
           caffeine.ai
         </a>

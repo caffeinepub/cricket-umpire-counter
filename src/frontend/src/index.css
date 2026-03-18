@@ -6,60 +6,60 @@
 
 @layer base {
   :root {
-    /* ── Vivid Stadium Night Theme ── */
-    --background: 0.1 0.04 240;
-    --foreground: 0.97 0.005 120;
-    --card: 0.14 0.05 235;
-    --card-foreground: 0.97 0.005 120;
-    --popover: 0.14 0.05 235;
-    --popover-foreground: 0.97 0.005 120;
+    /* ── Clean Cricket Theme (screenshot match) ── */
+    --background: 0.98 0.002 0;
+    --foreground: 0.12 0.01 0;
+    --card: 1 0 0;
+    --card-foreground: 0.12 0.01 0;
+    --popover: 1 0 0;
+    --popover-foreground: 0.12 0.01 0;
 
-    --primary: 0.65 0.26 145;
+    --primary: 0.33 0.1 155;
     --primary-foreground: 1 0 0;
 
-    --secondary: 0.18 0.06 235;
-    --secondary-foreground: 0.85 0.01 120;
+    --secondary: 0.95 0.005 0;
+    --secondary-foreground: 0.2 0.01 0;
 
-    --muted: 0.2 0.05 235;
-    --muted-foreground: 0.55 0.04 220;
+    --muted: 0.93 0.005 0;
+    --muted-foreground: 0.45 0.02 0;
 
-    --accent: 0.18 0.06 235;
-    --accent-foreground: 0.85 0.01 120;
+    --accent: 0.93 0.005 0;
+    --accent-foreground: 0.2 0.01 0;
 
-    --destructive: 0.56 0.27 20;
+    --destructive: 0.45 0.27 20;
     --destructive-foreground: 1 0 0;
 
-    --border: 0.3 0.07 235;
-    --input: 0.18 0.05 235;
-    --ring: 0.65 0.26 145;
+    --border: 0.88 0.005 0;
+    --input: 0.95 0.005 0;
+    --ring: 0.33 0.1 155;
     --radius: 0.75rem;
 
     /* Cricket tokens */
-    --cricket-dark-green: 0.28 0.14 155;
-    --cricket-green: 0.65 0.26 145;
-    --cricket-amber: 0.82 0.22 75;
-    --cricket-red: 0.55 0.27 20;
-    --cricket-blue: 0.6 0.27 255;
-    --cricket-teal: 0.68 0.22 180;
-    --cricket-grey: 0.38 0.04 255;
-    --cricket-dark-red: 0.44 0.22 15;
-    --cricket-forest: 0.52 0.2 147;
-    --cricket-lime: 0.65 0.26 130;
+    --cricket-dark-green: 0.28 0.12 155;
+    --cricket-green: 0.33 0.1 155;
+    --cricket-amber: 0.72 0.2 75;
+    --cricket-red: 0.45 0.27 20;
+    --cricket-blue: 0.38 0.22 255;
+    --cricket-teal: 0.42 0.18 180;
+    --cricket-grey: 0.38 0.01 0;
+    --cricket-dark-red: 0.18 0.14 15;
+    --cricket-forest: 0.33 0.1 155;
+    --cricket-lime: 0.42 0.14 147;
 
-    --chart-1: 0.65 0.26 145;
-    --chart-2: 0.82 0.22 75;
-    --chart-3: 0.55 0.27 20;
-    --chart-4: 0.6 0.27 255;
-    --chart-5: 0.68 0.22 180;
+    --chart-1: 0.33 0.1 155;
+    --chart-2: 0.72 0.2 75;
+    --chart-3: 0.45 0.27 20;
+    --chart-4: 0.38 0.22 255;
+    --chart-5: 0.42 0.18 180;
 
-    --sidebar: 0.1 0.04 240;
-    --sidebar-foreground: 0.97 0.005 120;
-    --sidebar-primary: 0.65 0.26 145;
+    --sidebar: 0.98 0.002 0;
+    --sidebar-foreground: 0.12 0.01 0;
+    --sidebar-primary: 0.33 0.1 155;
     --sidebar-primary-foreground: 1 0 0;
-    --sidebar-accent: 0.18 0.06 235;
-    --sidebar-accent-foreground: 0.85 0.01 120;
-    --sidebar-border: 0.3 0.07 235;
-    --sidebar-ring: 0.65 0.26 145;
+    --sidebar-accent: 0.93 0.005 0;
+    --sidebar-accent-foreground: 0.2 0.01 0;
+    --sidebar-border: 0.88 0.005 0;
+    --sidebar-ring: 0.33 0.1 155;
   }
 }
 
@@ -80,15 +80,7 @@
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     overscroll-behavior: none;
-    /* Rich deep multi-color gradient — no white anywhere */
-    background: linear-gradient(
-        160deg,
-        #060d1f 0%,
-        #071b10 40%,
-        #130820 80%,
-        #060d1f 100%
-      )
-      fixed;
+    background: #f8f8f8;
     min-height: 100vh;
   }
   #root {
@@ -96,17 +88,17 @@
   }
 }
 
-/* ── Full-screen panel base — ensures dark bg even on tall scrolls ── */
+/* ── Full-screen panel base ── */
 .panel-bg {
-  background: linear-gradient(160deg, #060d1f 0%, #071b10 45%, #130820 100%);
+  background: #f8f8f8;
   min-height: 100vh;
 }
 
-/* ── Scoreboard — Rich cricket green gradient ── */
+/* ── Scoreboard — dark forest green ── */
 .cricket-scoreboard {
-  background: linear-gradient(145deg, #083d23 0%, #0f6b40 50%, #198754 100%);
-  border-bottom: 2px solid rgba(34, 197, 94, 0.4);
-  box-shadow: 0 4px 32px rgba(15, 107, 64, 0.6), 0 8px 64px rgba(0, 0, 0, 0.5);
+  background: #1b5e20;
+  border-bottom: 2px solid #145217;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* ── Scoreboard title ── */
@@ -114,152 +106,162 @@
   letter-spacing: 0.12em;
 }
 
-/* ── Run button — vivid electric green ── */
+/* ── Button focus fix (mobile tap highlight) ── */
+button {
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+button:focus,
+button:focus-visible,
+button:focus-within,
+.btn-run:focus,
+.btn-run:focus-visible,
+.btn-boundary:focus,
+.btn-boundary:focus-visible,
+.btn-wicket:focus,
+.btn-wicket:focus-visible,
+.btn-tap:focus,
+.btn-tap:focus-visible,
+.btn-extra:focus,
+.btn-extra:focus-visible,
+.btn-wide:focus,
+.btn-noball:focus,
+.btn-bye:focus,
+.btn-legbye:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: unset;
+}
+*:focus {
+  outline: none !important;
+}
+
+/* ── Run button — dark forest green ── */
 .btn-run {
-  background: linear-gradient(145deg, #16a34a, #22c55e);
+  background: #1b5e20;
   color: #ffffff;
-  box-shadow: 0 4px 18px rgba(34, 197, 94, 0.55), 0 0 0 1px
-    rgba(34, 197, 94, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border: none;
 }
 
 .btn-run:hover {
-  background: linear-gradient(145deg, #15803d, #16a34a);
-  box-shadow: 0 6px 24px rgba(34, 197, 94, 0.7), 0 0 0 1px
-    rgba(34, 197, 94, 0.4);
+  background: #145217;
 }
 
 .btn-run:active {
-  background: #15803d;
+  background: #0e3d12;
   transform: scale(0.95);
 }
 
-/* ── Boundary button — brilliant blazing gold ── */
+/* ── Boundary button — golden amber ── */
 .btn-boundary {
-  background: linear-gradient(145deg, #d97706, #f59e0b, #fbbf24);
+  background: #c89200;
   color: #1a0a00;
   font-weight: 800;
-  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.65), 0 0 0 1px
-    rgba(251, 191, 36, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border: none;
 }
 
 .btn-boundary:hover {
-  background: linear-gradient(145deg, #b45309, #d97706, #f59e0b);
-  box-shadow: 0 6px 28px rgba(245, 158, 11, 0.8), 0 0 0 1px
-    rgba(245, 158, 11, 0.5);
+  background: #b07f00;
 }
 
-/* ── Wicket button — blazing crimson ── */
+/* ── Wicket button — red gradient ── */
 .btn-wicket {
-  background: linear-gradient(145deg, #991b1b, #dc2626, #ef4444);
+  background: linear-gradient(135deg, #e53935 0%, #b71c1c 100%);
   color: #ffffff;
-  box-shadow: 0 4px 22px rgba(220, 38, 38, 0.65), 0 0 0 1px
-    rgba(239, 68, 68, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   border: none;
 }
 
 .btn-wicket:hover {
-  background: linear-gradient(145deg, #7f1d1d, #991b1b, #dc2626);
-  box-shadow: 0 6px 32px rgba(220, 38, 38, 0.8);
+  background: linear-gradient(135deg, #c62828 0%, #7f0000 100%);
 }
 
 /* ── Extras ── */
 .btn-wide {
-  background: linear-gradient(145deg, #1d4ed8, #3b82f6);
+  background: #1565c0;
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.55), 0 0 0 1px
-    rgba(96, 165, 250, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border: none;
 }
 
 .btn-wide:hover {
-  background: linear-gradient(145deg, #1e40af, #1d4ed8);
-  box-shadow: 0 6px 22px rgba(59, 130, 246, 0.7);
+  background: #0d47a1;
 }
 
 .btn-noball {
-  background: linear-gradient(145deg, #c2410c, #f97316, #fb923c);
+  background: #c87200;
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.55), 0 0 0 1px
-    rgba(251, 146, 60, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border: none;
 }
 
 .btn-noball:hover {
-  background: linear-gradient(145deg, #9a3412, #c2410c, #ea580c);
-  box-shadow: 0 6px 22px rgba(249, 115, 22, 0.7);
+  background: #a85f00;
 }
 
 .btn-bye {
-  background: linear-gradient(145deg, #0f766e, #14b8a6, #2dd4bf);
+  background: #2e7d32;
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(20, 184, 166, 0.55), 0 0 0 1px
-    rgba(45, 212, 191, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border: none;
 }
 
 .btn-bye:hover {
-  background: linear-gradient(145deg, #134e4a, #0f766e, #0d9488);
-  box-shadow: 0 6px 22px rgba(20, 184, 166, 0.7);
+  background: #1b5e20;
 }
 
 .btn-legbye {
-  background: linear-gradient(145deg, #15803d, #22c55e);
+  background: #00695c;
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.45), 0 0 0 1px
-    rgba(74, 222, 128, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border: none;
 }
 
 .btn-legbye:hover {
-  background: linear-gradient(145deg, #166534, #15803d);
-  box-shadow: 0 6px 22px rgba(34, 197, 94, 0.6);
+  background: #004d40;
 }
 
 /* ── Undo / Reset ── */
 .btn-undo {
-  background: linear-gradient(145deg, #374151, #4b5563);
+  background: #1b3a1b;
   color: #ffffff;
-  box-shadow: 0 2px 12px rgba(75, 85, 99, 0.5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border: none;
 }
 
 .btn-undo:hover {
-  background: linear-gradient(145deg, #1f2937, #374151);
+  background: #122812;
 }
 
 .btn-reset {
-  background: linear-gradient(145deg, #7f1d1d, #991b1b);
+  background: #5b0000;
   color: #ffffff;
-  box-shadow: 0 2px 12px rgba(153, 27, 27, 0.55);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border: none;
 }
 
 .btn-reset:hover {
-  background: linear-gradient(145deg, #450a0a, #7f1d1d);
+  background: #3e0000;
 }
 
 /* ── Player stats toggle ── */
 .btn-stats-toggle {
-  border-left: 3px solid #22c55e;
+  border-left: 3px solid #1b5e20;
 }
 
-/* ── Cricket card — vivid dark glass with colored glow ── */
+/* ── Cricket card — clean white card ── */
 .cricket-card {
-  background: linear-gradient(
-    145deg,
-    rgba(6, 20, 10, 0.92),
-    rgba(10, 15, 35, 0.88)
-  );
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* ── Tap feedback ── */
 .btn-tap {
-  transition: transform 0.1s ease, opacity 0.1s ease, box-shadow 0.15s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease;
 }
 
 .btn-tap:active {
@@ -267,49 +269,49 @@
   opacity: 0.88;
 }
 
-/* ── Input fields — dark glass ── */
+/* ── Input fields ── */
 input[type="text"],
 input[type="number"],
 select {
-  background-color: rgba(6, 20, 10, 0.8) !important;
-  border: 1.5px solid rgba(34, 197, 94, 0.35) !important;
-  color: #ffffff !important;
+  background-color: #ffffff !important;
+  border: 1.5px solid #d1d5db !important;
+  color: #111827 !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus,
 select:focus {
-  border-color: #22c55e !important;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3) !important;
+  border-color: #1b5e20 !important;
+  box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.15) !important;
   outline: none !important;
-  background-color: rgba(10, 30, 15, 0.9) !important;
+  background-color: #ffffff !important;
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.3) !important;
+  color: #9ca3af !important;
 }
 
 /* ── Over preset chips ── */
 .chip-overs {
-  background: rgba(6, 20, 10, 0.7);
-  border: 1.5px solid rgba(34, 197, 94, 0.3);
-  color: rgba(255, 255, 255, 0.6);
+  background: #f3f4f6;
+  border: 1.5px solid #d1d5db;
+  color: #4b5563;
   transition: all 0.15s ease;
 }
 
 .chip-overs:hover,
 .chip-overs.active,
 .chip-overs[data-active="true"] {
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-  border-color: #22c55e;
+  background: #1b5e20;
+  border-color: #1b5e20;
   color: #fff;
-  box-shadow: 0 3px 16px rgba(34, 197, 94, 0.6);
+  box-shadow: 0 2px 8px rgba(27, 94, 32, 0.3);
 }
 
 /* ── Ball dot ── */
 .ball-dot-filled {
-  color: #fbbf24;
+  color: #f59e0b;
 }
 
 /* ── Score pop animation ── */
@@ -331,35 +333,34 @@ input::placeholder {
 
 /* ── Target info bar ── */
 .target-info-bar {
-  background: linear-gradient(135deg, #071b10 0%, #0d3d22 50%, #0f5132 100%);
+  background: #1b5e20;
   color: #ffffff;
   border-radius: 14px;
   padding: 12px 16px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  box-shadow: 0 4px 24px rgba(15, 81, 50, 0.5), 0 0 0 1px rgba(34, 197, 94, 0.3);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* ── Innings break screen ── */
 .innings-break-card {
-  background: linear-gradient(160deg, #083d23 0%, #0f5132 50%, #198754 100%);
+  background: #1b5e20;
   color: #ffffff;
   border-radius: 20px;
   padding: 28px 24px;
-  box-shadow: 0 8px 48px rgba(15, 81, 50, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.3);
-  border-top: 3px solid #f59e0b;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border-top: 3px solid #c89200;
 }
 
 /* ── Result screen ── */
 .result-card {
-  background: linear-gradient(160deg, #083d23 0%, #0f5132 50%, #198754 100%);
+  background: #1b5e20;
   color: #ffffff;
   border-radius: 20px;
   padding: 28px 24px;
-  box-shadow: 0 8px 48px rgba(15, 81, 50, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.3);
-  border-top: 3px solid #f59e0b;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border-top: 3px solid #c89200;
 }
 
 /* ── Scrollable main area ── */
@@ -370,10 +371,5 @@ main {
 /* ── Section dividers ── */
 .section-divider {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(34, 197, 94, 0.3),
-    transparent
-  );
+  background: #e5e7eb;
 }
